@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">M_Feelm</string>
+    <string name="MENU1">나의 필름</string>
+    <string name="MENU2">검색</string>
+    <string name="MENU3">통계</string>
+    <string name="MENU4">피드</string>
 </resources>
