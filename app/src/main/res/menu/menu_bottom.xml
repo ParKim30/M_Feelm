@@ -2,26 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/navigation_menu1"
+        android:id="@+id/menu_feelm"
         android:icon="@drawable/feelm"
         android:enabled="true"
         app:showAsAction="never"
         android:title="@string/MENU1" />
 
     <item
-        android:id="@+id/navigation_menu2"
+        android:id="@+id/menu_search"
         android:icon="@drawable/search"
         android:enabled="true"
         android:title="@string/MENU2" />
 
     <item
-        android:id="@+id/navigation_menu3"
+        android:id="@+id/menu_statistic"
         android:icon="@drawable/statistic"
         android:enabled="true"
         android:title="@string/MENU3" />
 
     <item
-        android:id="@+id/navigation_menu4"
+        android:id="@+id/menu_feed"
         android:icon="@drawable/feed"
         android:enabled="true"
         android:title="@string/MENU4" />
