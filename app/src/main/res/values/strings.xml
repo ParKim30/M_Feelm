@@ -4,5 +4,7 @@
     <string name="MENU2">검색</string>
     <string name="MENU3">통계</string>
     <string name="MENU4">피드</string>
+    <string name="todo">TODO</string>
+    <string name="textview">TextView</string>
 
 </resources>

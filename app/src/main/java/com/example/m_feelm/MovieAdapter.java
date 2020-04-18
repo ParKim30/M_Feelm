@@ -89,6 +89,13 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mTvPubData = view.findViewById(R.id.tv_pub_data);
             mTvDirector = view.findViewById(R.id.tv_director);
             mTvActor = view.findViewById(R.id.tv_actor);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //process click event.
+                }
+            });
         }
 
         public ImageView getImage() {
