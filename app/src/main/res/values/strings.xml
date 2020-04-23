@@ -7,4 +7,8 @@
     <string name="todo">TODO</string>
     <string name="textview">TextView</string>
 
+    <string name="signup">회원가입</string>
+    <string name="success_signup">회원가입 성공</string>
+    <string name="failed_signup">회원가입 실패</string>
+
 </resources>

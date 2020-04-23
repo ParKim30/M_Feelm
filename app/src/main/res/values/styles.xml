@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="M_Feelm" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="M_Feelm" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#FF5D18</item>
         <item name="colorPrimaryDark">#FF5D18</item>

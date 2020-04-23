@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "489015732498",
+    "firebase_url": "https://mfeelm-38b09.firebaseio.com",
+    "project_id": "mfeelm-38b09",
+    "storage_bucket": "mfeelm-38b09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489015732498:android:e4268019aa026d8417abcb",
+        "android_client_info": {
+          "package_name": "com.example.m_feelm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489015732498-0nj0unekfinnvnpjqc5a9n52jrjqrjsq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQyat-_hoB75XA2tiYl0OFy_0pcxZLjB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489015732498-0nj0unekfinnvnpjqc5a9n52jrjqrjsq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
