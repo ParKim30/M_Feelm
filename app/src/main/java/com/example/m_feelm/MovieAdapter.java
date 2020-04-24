@@ -1,6 +1,7 @@
 package com.example.m_feelm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +25,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
 
     private ArrayList<Item> mMovieInfoArrayList;
+    private Intent intent;
 
     public MovieAdapter(Context context, ArrayList<Item> movieInfoArrayList) {
         mContext = context;
@@ -80,6 +83,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView mTvPubData;
         private TextView mTvDirector;
         private TextView mTvActor;
+        private Intent intent;
 
         MovieViewHolder(View view) {
             super(view);
@@ -93,7 +97,11 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //process click event.
+                    intent = new Intent(v.getContext(), WriteReview.class);
+//                    intent.putExtra("number", position);
+//                    intent.putExtra("title",itemList.get(position).getItem_title());
+                    v.getContext().startActivity(intent);
+                    Toast.makeText(v.getContext(), "클릭 되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
