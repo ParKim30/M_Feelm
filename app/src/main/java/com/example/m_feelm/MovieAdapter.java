@@ -25,7 +25,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
 
     private ArrayList<Item> mMovieInfoArrayList;
-    private Intent intent;
 
     public MovieAdapter(Context context, ArrayList<Item> movieInfoArrayList) {
         mContext = context;
@@ -75,7 +74,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     //리사이클러 뷰의 아이템들 아이디를 홀더에 담음
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
+    class MovieViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mIvPoster;
         private TextView mTvTitle;
@@ -94,14 +93,21 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mTvDirector = view.findViewById(R.id.tv_director);
             mTvActor = view.findViewById(R.id.tv_actor);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            view.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if(position != RecyclerView.NO_POSITION) {
+                    Item item = mMovieInfoArrayList.get(position);
+
                     intent = new Intent(v.getContext(), WriteReview.class);
-//                    intent.putExtra("number", position);
-//                    intent.putExtra("title",itemList.get(position).getItem_title());
+                    intent.putExtra("title", item.getTitle());
+                    intent.putExtra("rating", item.getUserRating());
+                    intent.putExtra("director", item.getDirector());
+                    intent.putExtra("actor", item.getActor());
+                    intent.putExtra("date",item.getPubDate());
+                    intent.putExtra("poster",item.getImage());
+
                     v.getContext().startActivity(intent);
-                    Toast.makeText(v.getContext(), "클릭 되었습니다.", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
