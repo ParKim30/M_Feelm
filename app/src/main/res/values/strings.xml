@@ -19,5 +19,7 @@
     <string name="free">자유롭게 작성해주세요.</string>
     <string name="Date">관람 날짜</string>
     <string name="complete">완료</string>
+    <string name="name">Name</string>
+    <string name="ShareReview">리뷰 공개 여부</string>
 
 </resources>

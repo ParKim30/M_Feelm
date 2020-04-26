@@ -99,7 +99,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     Item item = mMovieInfoArrayList.get(position);
 
                     intent = new Intent(v.getContext(), WriteReview.class);
-                    intent.putExtra("title", item.getTitle());
+                    intent.putExtra("title", Html.fromHtml(item.getTitle()).toString());
                     intent.putExtra("rating", item.getUserRating());
                     intent.putExtra("director", item.getDirector());
                     intent.putExtra("actor", item.getActor());
