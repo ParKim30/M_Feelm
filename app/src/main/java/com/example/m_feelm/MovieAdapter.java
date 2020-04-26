@@ -1,6 +1,7 @@
 package com.example.m_feelm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,7 +74,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     //리사이클러 뷰의 아이템들 아이디를 홀더에 담음
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
+    class MovieViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mIvPoster;
         private TextView mTvTitle;
@@ -80,6 +82,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView mTvPubData;
         private TextView mTvDirector;
         private TextView mTvActor;
+        private Intent intent;
 
         MovieViewHolder(View view) {
             super(view);
@@ -90,10 +93,21 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mTvDirector = view.findViewById(R.id.tv_director);
             mTvActor = view.findViewById(R.id.tv_actor);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //process click event.
+            view.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if(position != RecyclerView.NO_POSITION) {
+                    Item item = mMovieInfoArrayList.get(position);
+
+                    intent = new Intent(v.getContext(), WriteReview.class);
+                    intent.putExtra("title", item.getTitle());
+                    intent.putExtra("rating", item.getUserRating());
+                    intent.putExtra("director", item.getDirector());
+                    intent.putExtra("actor", item.getActor());
+                    intent.putExtra("date",item.getPubDate());
+                    intent.putExtra("poster",item.getImage());
+
+                    v.getContext().startActivity(intent);
+
                 }
             });
         }

@@ -10,5 +10,14 @@
     <string name="signup">회원가입</string>
     <string name="success_signup">회원가입 성공</string>
     <string name="failed_signup">회원가입 실패</string>
+    <string name="pubdata">pubData</string>
+    <string name="director">director</string>
+    <string name="actor">actor</string>
+    <string name="review_comment">관람하신 영화, 어떠셨나요? 평점과 리뷰를 남겨주세요.</string>
+    <string name="myRating">나의 별점</string>
+    <string name="MyReview">나의 리뷰</string>
+    <string name="free">자유롭게 작성해주세요.</string>
+    <string name="Date">관람 날짜</string>
+    <string name="complete">완료</string>
 
 </resources>
