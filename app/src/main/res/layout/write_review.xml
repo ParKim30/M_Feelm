@@ -5,12 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,8 +53,9 @@
                     android:isIndicator="true"
                     android:max="5"
                     android:numStars="5"
-                    android:stepSize="0.5" />
-                <!--                android:style="@style/Widget.AppCompat.RatingBar.Small" -->
+                    android:stepSize="0.5"
+                    />
+                <!--   android:style="@style/Widget.AppCompat.RatingBar.Small"              -->
 
             </LinearLayout>
 
@@ -171,23 +173,33 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="date"
-            android:text="@string/name"
             android:clickable="true"
             android:focusable="false"
+            android:hint="@string/SelectDate"
             android:autofillHints="" />
 
         <Switch
             android:id="@+id/reviewShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ShareReview" />
+            android:text="@string/ShareReview"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="0dp"
+            android:paddingRight="0dp"
+            android:textColor="#000000"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/complete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#FF5D18"
             android:bufferType="normal"
-            android:text="@string/complete" />
+            android:text="@string/complete"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 </ScrollView>

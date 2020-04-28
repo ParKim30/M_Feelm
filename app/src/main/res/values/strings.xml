@@ -10,7 +10,6 @@
     <string name="signup">회원가입</string>
     <string name="success_signup">회원가입 성공</string>
     <string name="failed_signup">회원가입 실패</string>
-    <string name="pubdata">pubData</string>
     <string name="director">director</string>
     <string name="actor">actor</string>
     <string name="review_comment">관람하신 영화, 어떠셨나요? 평점과 리뷰를 남겨주세요.</string>
@@ -21,5 +20,11 @@
     <string name="complete">완료</string>
     <string name="name">Name</string>
     <string name="ShareReview">리뷰 공개 여부</string>
+    <string name="SelectDate">날짜 선택</string>
+    <string name="noimage">NoImage</string>
+    <string name="title">title</string>
+    <string name="pubdata">pubData</string>
+    <string name="InputSearch">검색어를 입력하세요</string>
+    <string name="Search">검색</string>
 
 </resources>
