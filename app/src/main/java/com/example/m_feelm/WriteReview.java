@@ -24,6 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -70,12 +72,18 @@ public class WriteReview extends AppCompatActivity {
         RatingBar m_rating= findViewById(R.id.user_rating);
         TextView m_date = findViewById(R.id.pubDate);
         ImageView m_poster=findViewById(R.id.moviePoster);
+        TextView m_raingNum=findViewById(R.id.user_rating_num);
 
         m_title.setText(Html.fromHtml(mtitle).toString());
         m_director.setText(mdirector);
         m_actor.setText(mactor);
         m_rating.setRating(Float.parseFloat(mrating) / 2);
         m_date.setText(mdate);
+
+
+        String ratingNum = String.format("%.1f", Float.parseFloat(mrating) / 2);
+
+        m_raingNum.setText(ratingNum);
 
 
         Glide.with(this)

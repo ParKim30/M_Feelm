@@ -52,9 +52,13 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         String reDirector = item.getDirector().replace("|"," | ");
         String reActor = item.getActor().replace("|"," | ");
 
+        String ratingNum = String.format("%.1f", Float.parseFloat(item.getUserRating()) / 2);
+
+
         movieViewHolder.mTvTitle.setText(Html.fromHtml(item.getTitle()));
         movieViewHolder.mRbUserRating.setRating(Float.parseFloat(item.getUserRating()) / 2);
         movieViewHolder.mTvPubData.setText(item.getPubDate());
+        movieViewHolder.mRatingNum.setText(ratingNum);
         //movieViewHolder.mTvDirector.setText(Html.fromHtml(reDirector));
         //movieViewHolder.mTvActor.setText(Html.fromHtml(reActor));
 
@@ -90,6 +94,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView mTvPubData;
         private TextView mTvDirector;
         private TextView mTvActor;
+        private TextView mRatingNum;
         private Intent intent;
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -99,6 +104,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mTvTitle = view.findViewById(R.id.tv_title);
             mRbUserRating = view.findViewById(R.id.rb_user_rating);
             mTvPubData = view.findViewById(R.id.tv_pub_data);
+            mRatingNum=view.findViewById(R.id.user_rating_num);
             //mTvDirector = view.findViewById(R.id.tv_director);
             //mTvActor = view.findViewById(R.id.tv_actor);
 
