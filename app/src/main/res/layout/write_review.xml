@@ -63,11 +63,11 @@
 
                     <TextView
                         android:id="@+id/user_rating_num"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="TextView"
+                        android:text="@string/textview"
                         android:textColor="#FF5D18"
                         android:textSize="18sp" />
                 </LinearLayout>

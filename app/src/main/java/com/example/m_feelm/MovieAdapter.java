@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -29,7 +28,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private ArrayList<Item> mMovieInfoArrayList;
 
-    public MovieAdapter(Context context, ArrayList<Item> movieInfoArrayList) {
+    MovieAdapter(Context context, ArrayList<Item> movieInfoArrayList) {
         mContext = context;
         mMovieInfoArrayList = movieInfoArrayList;
     }
@@ -74,12 +73,12 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return mMovieInfoArrayList.size();
     }
 
-    public void clearItems() {
+    void clearItems() {
         mMovieInfoArrayList.clear();
         notifyDataSetChanged();
     }
 
-    public void clearAndAddItems(ArrayList<Item> items) {
+    void clearAndAddItems(ArrayList<Item> items) {
         mMovieInfoArrayList.clear();
         mMovieInfoArrayList.addAll(items);
         notifyDataSetChanged();
@@ -92,8 +91,8 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView mTvTitle;
         private RatingBar mRbUserRating;
         private TextView mTvPubData;
-        private TextView mTvDirector;
-        private TextView mTvActor;
+//        private TextView mTvDirector;
+//        private TextView mTvActor;
         private TextView mRatingNum;
         private Intent intent;
 
@@ -136,7 +135,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             });
         }
 
-        public ImageView getImage() {
+        ImageView getImage() {
             return mIvPoster;
         }
 

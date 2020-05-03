@@ -5,8 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,26 +22,19 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class WriteReview extends AppCompatActivity {
 
-    int y=0, m=0, d=0;
-
-    private Button complete_btn;
-    private ImageButton calender;
-
     DatabaseReference mDBReference = null;
     HashMap<String, Object> childUpdates = null;
-    Map<String, Object> userValue = null;
-    Review userReview = null;
+   // Map<String, Object> userValue = null;
+    //Review userReview = null;
 
     Calendar myCalendar = Calendar.getInstance();
 
@@ -72,7 +63,7 @@ public class WriteReview extends AppCompatActivity {
         RatingBar m_rating= findViewById(R.id.user_rating);
         TextView m_date = findViewById(R.id.pubDate);
         ImageView m_poster=findViewById(R.id.moviePoster);
-        TextView m_raingNum=findViewById(R.id.user_rating_num);
+        TextView m_ratingNum=findViewById(R.id.user_rating_num);
 
         m_title.setText(Html.fromHtml(mtitle).toString());
         m_director.setText(mdirector);
@@ -83,7 +74,7 @@ public class WriteReview extends AppCompatActivity {
 
         String ratingNum = String.format("%.1f", Float.parseFloat(mrating) / 2);
 
-        m_raingNum.setText(ratingNum);
+        m_ratingNum.setText(ratingNum);
 
 
         Glide.with(this)
@@ -92,7 +83,7 @@ public class WriteReview extends AppCompatActivity {
                 .into(m_poster);
 
 
-        complete_btn=findViewById(R.id.complete);
+        Button complete_btn = findViewById(R.id.complete);
 
         mDBReference = FirebaseDatabase.getInstance().getReference();
         childUpdates = new HashMap<>();
