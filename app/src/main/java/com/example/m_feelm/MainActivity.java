@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
 
+            findViewById(R.id.bottom_navigation).setBackgroundColor(Color.WHITE);
             switch(menuItem.getItemId())
             {
                 case R.id.menu_search:
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
                     break;
                 case R.id.menu_feelm:
+                    findViewById(R.id.bottom_navigation).setBackgroundColor(Color.BLACK);
                     transaction.replace(R.id.frame_layout, fragmentFeelm).commitAllowingStateLoss();
                     break;
                 case R.id.menu_statistic:
