@@ -9,5 +9,11 @@ public class StatisticMovieItem {
     public String getMovieNm(){
         return movieNm;
     }
+    public void setMovieNm(String title){
+        this.movieNm=title;
+    }
+    public StatisticMovieItem(String title){
+        movieNm = title;
+    }
 
 }
