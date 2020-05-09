@@ -10,6 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/M_Feelm">
         <activity android:name=".SignUpActivity"></activity>
         <activity android:name=".LoginActivity"><intent-filter>
