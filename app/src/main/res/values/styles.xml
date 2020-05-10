@@ -12,7 +12,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#FF5D18</item>
         <item name="colorPrimaryDark">#FF5D18</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">#FF5D18</item>
     </style>
 
 </resources>
