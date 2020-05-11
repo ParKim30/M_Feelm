@@ -3,6 +3,7 @@ package com.example.m_feelm;
 public class StatisticMovieItem {
     private int rank;
     private String movieNm;
+
     public int getRank() {
         return rank;
     }
@@ -15,5 +16,4 @@ public class StatisticMovieItem {
     public StatisticMovieItem(String title){
         movieNm = title;
     }
-
 }

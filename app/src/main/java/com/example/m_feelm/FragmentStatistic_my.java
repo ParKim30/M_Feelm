@@ -1,5 +1,6 @@
 package com.example.m_feelm;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -21,9 +22,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
@@ -39,6 +51,9 @@ public class FragmentStatistic_my extends Fragment {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private ChildEventListener mChild;
+    private TextView totalTime;
+
+    ArrayList<UserReview> userReviews=new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,9 +62,62 @@ public class FragmentStatistic_my extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_statistic_my, container, false);
         myRanking(root);
 
-
+        totalTime=root.findViewById(R.id.TotalTime);
+        //MyAsyncTask async = new MyAsyncTask();
+        //async.execute();
         return root;
     }
+    /*class MyAsyncTask extends AsyncTask<String,Void,StatisticMovieItem[]> {
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected StatisticMovieItem[] doInBackground(String... parmas) {
+
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json").newBuilder();
+            urlBuilder.addQueryParameter("key", "2bc022ca249311ee687b6976e45237a4");
+            String url = urlBuilder.build().toString();
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                Gson gson = new GsonBuilder().create();
+                JsonParser parser = new JsonParser();
+                //제공되는 오픈API데이터에서 어떤 항목을 가여올지 설정해야 하는데.... 음~
+                JsonElement rootObject = parser.parse(response.body().charStream())
+                        .getAsJsonObject().get("boxOfficeResult").getAsJsonObject().get("dailyBoxOfficeList"); //원하는 항목(?)까지 찾아 들어가야 한다.
+                posts = gson.fromJson(rootObject, StatisticMovieItem[].class);
+                return posts;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(StatisticMovieItem[] result) {
+            super.onPostExecute(result);
+            //요청결과를 여기서 처리한다. 화면에 출력하기등...
+            //Log.d("Result:", result.toString());
+            //if(result.length > 0){
+            int j = 0;
+            for (StatisticMovieItem post : result) {
+                if (j < 10) {
+                    Log.d("FragmentStatistic_movie", post.getMovieNm());//영화제목 출력
+                    stitle1[j] = post.getMovieNm().toString();
+                    title1[j].setText(post.getMovieNm());
+                    j++;
+                }
+            }
+        }
+
+        public void MyTotalTime(){
+
+        }
+    }
+     */
     private void myRanking(View view){
         FirebaseUser user;
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -62,8 +130,6 @@ public class FragmentStatistic_my extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance();
         mReference=mDatabase.getReference("User_review");
-
-        ArrayList<UserReview> userReviews=new ArrayList<>();
 
         if(user!=null) {
             mReference.orderByChild("id").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {

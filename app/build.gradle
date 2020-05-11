@@ -9,6 +9,7 @@ android {
         applicationId "com.example.m_feelm"
         minSdkVersion 16
         targetSdkVersion 28
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
 
@@ -54,4 +55,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'org.jsoup:jsoup:1.11.3'
 
-    implementation 'com.android.support:multidex:1.0.3'}
+    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
+}
