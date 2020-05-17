@@ -187,7 +187,7 @@ public class FragmentStatistic_movie extends Fragment {
             super.onPostExecute(result);
             //요청결과를 여기서 처리한다. 화면에 출력하기등...
             //Log.d("Result:", result.toString());
-            //if(result.length > 0){
+            if(result!=null){
                 int j=0;
                 for (StatisticMovieItem post: result){
                     if(j<10){
@@ -197,7 +197,7 @@ public class FragmentStatistic_movie extends Fragment {
                     j++;
                     }
                 }
-            //}
+            }
         }
     }
 

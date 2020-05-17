@@ -27,5 +27,7 @@
     <string name="InputSearch">검색어를 입력하세요</string>
     <string name="Search">검색</string>
     <string name="textview">TextView</string>
+    <string name="myTotalTime">나의 총 관람시간</string>
+    <string name="genreChart">관람 영화 장르별</string>
 
 </resources>
