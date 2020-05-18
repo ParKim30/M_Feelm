@@ -54,6 +54,7 @@ public class WriteReview extends AppCompatActivity {
    // Map<String, Object> userValue = null;
     //Review userReview = null;
     String mtitle;
+    String mposter;
     String movieCode="123";
 
     Calendar myCalendar = Calendar.getInstance();
@@ -82,7 +83,7 @@ public class WriteReview extends AppCompatActivity {
         String mdirector=getIntent().getStringExtra("director");
         String mactor=getIntent().getStringExtra("actor");
         String mdate=getIntent().getStringExtra("date");
-        String mposter=getIntent().getStringExtra("poster");
+        mposter=getIntent().getStringExtra("poster");
 
         TextView m_title = findViewById(R.id.title);
         TextView m_director = findViewById(R.id.director);
@@ -146,7 +147,7 @@ public class WriteReview extends AppCompatActivity {
                         DatabaseReference newPostRef = postsRef.push();
                         //고유한 키 생성
                         Log.d("코드는?",movieCode);
-                        newPostRef.setValue(new Review(id, mtitle, date.getText().toString(), rating.getRating(), user_review.getText().toString(), feedYN, write_date,movieCode));
+                        newPostRef.setValue(new Review(id, mtitle, date.getText().toString(), rating.getRating(), user_review.getText().toString(), feedYN, write_date,movieCode,mposter));
                     }
                 }
         );

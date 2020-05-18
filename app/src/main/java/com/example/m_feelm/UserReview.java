@@ -9,9 +9,10 @@ public class UserReview implements Comparable<UserReview>{
     private String watch_Date;
     private String write_Date;
     private String movieCode;
+    private String posterUrl;
 
     public UserReview(){}
-    public UserReview(String title, float rating, String Uid, boolean feedYN, String UserReview, String watchDate, String writeDate,String movieCode){
+    public UserReview(String title, float rating, String Uid, boolean feedYN, String UserReview, String watchDate, String writeDate,String movieCode,String posterUrl){
         this.title=title;
         this.rating=rating;
         this.id=Uid;
@@ -20,14 +21,23 @@ public class UserReview implements Comparable<UserReview>{
         this.watch_Date=watchDate;
         this.write_Date=writeDate;
         this.movieCode=movieCode;
+        this.posterUrl=posterUrl;
     }
 
     public void setMovieCd(String movieCd) {
         this.movieCode = movieCode;
     }
 
-    String getMovieCode() {
+    public String getMovieCode() {
         return movieCode;
+    }
+
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
     }
 
     public void setFeedYN(boolean feedYN) {
@@ -66,7 +76,7 @@ public class UserReview implements Comparable<UserReview>{
         return id;
     }
 
-    private float getRating() {
+    public float getRating() {
         return rating;
     }
 
@@ -85,6 +95,9 @@ public class UserReview implements Comparable<UserReview>{
     @Override
     public int compareTo(UserReview review) {
         float targetAge = review.getRating();
-        return Float.compare(rating, targetAge);
+        if(rating == targetAge) return 0;
+        else if(rating > targetAge) return 1;
+        else return -1;
+        //return Float.compare(rating, targetAge);
     }
 }

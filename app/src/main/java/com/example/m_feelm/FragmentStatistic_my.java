@@ -13,8 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -65,6 +68,7 @@ public class FragmentStatistic_my extends Fragment {
     private TextView totalTime;
     private int showTime=0;
     private TextView myRanking[]=new TextView[3];
+    private ImageView rankingImg[]=new ImageView[3];
 
     private FirebaseUser user;
 
@@ -211,6 +215,9 @@ public class FragmentStatistic_my extends Fragment {
         myRanking[1]=view.findViewById(R.id.myRanking2);
         myRanking[2]=view.findViewById(R.id.myRanking3);
 
+        rankingImg[0]=view.findViewById(R.id.rankingImg1);
+        rankingImg[1]=view.findViewById(R.id.rankingImg2);
+        rankingImg[2]=view.findViewById(R.id.rankingImg3);
 
         mDatabase = FirebaseDatabase.getInstance();
         mReference=mDatabase.getReference("User_review");
@@ -239,7 +246,7 @@ public class FragmentStatistic_my extends Fragment {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     UserReview review=child.getValue(UserReview.class);
                     userReviews.add(review);
-                    Log.d("User val", child.child("title").getValue().toString());
+                    Log.d("User val", review.getMovieCode());
                     Log.d("User val", child.child("rating").getValue().toString());
 
                 }
@@ -249,6 +256,12 @@ public class FragmentStatistic_my extends Fragment {
                 for(int i=0;i<userReviews.size();i++){
                     if(i<3){
                         myRanking[i].setText(userReviews.get(i).getTitle());
+                        //Log.d("출력랭킹", userReviews.get(i).getRating());
+                        Log.d("출력랭킹", userReviews.get(i).getTitle());
+                        Glide.with(getContext())
+                                .load(userReviews.get(i).getPosterUrl())
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(rankingImg[i]);
                     }
                     movieCd.add(userReviews.get(i).getMovieCode());
                 }
