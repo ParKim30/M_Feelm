@@ -23,6 +23,9 @@ public class FragmentStatistic extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fv = inflater.inflate(R.layout.fragment_statistic, container, false);
         tabLayout = (TabLayout)fv.findViewById(R.id.layout_tab);
+        Fragment fg;
+        fg = FragmentStatistic_movie.newInstance();
+        setChildFragment(fg);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

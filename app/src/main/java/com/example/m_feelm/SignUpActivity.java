@@ -85,8 +85,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         if(task.isSuccessful()){
                             //Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(SignUpActivity.this, "등록 완료!", Toast.LENGTH_SHORT).show();
-                            finish();
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            finish();
                         } else {
                             //에러발생시
                             //textviewMessage.setText("에러유형\n - 이미 등록된 이메일  \n -암호 최소 6자리 이상 \n - 서버에러");

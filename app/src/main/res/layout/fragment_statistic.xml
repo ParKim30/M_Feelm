@@ -20,35 +20,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/layout_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#FF5D18"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#FF5D18"
+            app:tabTextColor="#787878">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/movie_statistic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="박스오피스" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/my_statistic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="내 관람 통계" />
+        </com.google.android.material.tabs.TabLayout>
 
         <FrameLayout
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/layout_tab"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabGravity="center"
-                app:tabIndicatorColor="#FF5D18"
-                app:tabMode="fixed"
-                app:tabSelectedTextColor="#FF5D18"
-                app:tabTextColor="#787878">
+                android:layout_height="match_parent">
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/movie_statistic"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="영화 통계" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/my_statistic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="내 관람 통계" />
-            </com.google.android.material.tabs.TabLayout>
+                    android:orientation="vertical" />
+            </ScrollView>
         </FrameLayout>
 
 
