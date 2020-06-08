@@ -21,9 +21,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -74,9 +77,13 @@ public class FragmentStatistic_my extends Fragment {
 
     private ArrayList<UserReview> userReviews=new ArrayList<>();
     private ArrayList<String> mCd=new ArrayList<>();
+    private ArrayList<String> people=new ArrayList<>();
     private Map<String, Long> counts;
+    private Map<String, Long> peopleCounts;
+
     private View root;
     private PieChart pieChart;
+    private PieChart pieChart2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,7 +98,7 @@ public class FragmentStatistic_my extends Fragment {
         return root;
     }
 
-    private void createChart(){
+    private void createChart1(){
         Log.d("!!?Result:", String.valueOf(counts));
         pieChart = root.findViewById(R.id.piechart);
 
@@ -101,22 +108,16 @@ public class FragmentStatistic_my extends Fragment {
 
         pieChart.setDragDecelerationFrictionCoef(0.95f);
 
-        pieChart.setDrawHoleEnabled(false);
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleRadius(50.f);
+        pieChart.setTransparentCircleRadius(52.f);
         pieChart.setHoleColor(Color.WHITE);
-        pieChart.setTransparentCircleRadius(61f);
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
         for( String key : counts.keySet() ){
             String repKey=key.replace("\"","");
             yValues.add(new PieEntry(counts.get(key),repKey));
         }
-
-//        yValues.add(new PieEntry(34f,"Japen"));
-//        yValues.add(new PieEntry(23f,"USA"));
-//        yValues.add(new PieEntry(14f,"UK"));
-//        yValues.add(new PieEntry(35f,"India"));
-//        yValues.add(new PieEntry(40f,"Russia"));
-//        yValues.add(new PieEntry(40f,"Korea"));
 
         Description description = new Description();
         description.setText("영화 장르"); //라벨
@@ -135,6 +136,63 @@ public class FragmentStatistic_my extends Fragment {
         data.setValueTextColor(Color.YELLOW);
 
         pieChart.setData(data);
+    }
+
+    private void createChart2(){
+        Log.d("!!?Result:", String.valueOf(peopleCounts));
+        pieChart2 = root.findViewById(R.id.piechart2);
+
+        pieChart2.setUsePercentValues(true);
+        pieChart2.getDescription().setEnabled(false);
+        pieChart2.setExtraOffsets(5,10,5,5);
+
+        pieChart2.setCenterText("짠");
+        pieChart2.setCenterTextSize(10F);
+
+        pieChart2.setDragDecelerationFrictionCoef(0.95f);
+
+        pieChart2.setDrawHoleEnabled(true);
+        pieChart2.setHoleRadius(50.f);
+        pieChart2.setTransparentCircleRadius(52.f);
+        pieChart2.setHoleColor(Color.WHITE);
+
+        ArrayList<PieEntry> yValues = new ArrayList<>();
+        for( String key : peopleCounts.keySet() ){
+            String repKey=key.replace("\"","");
+            yValues.add(new PieEntry(peopleCounts.get(key),repKey));
+        }
+
+//        Description description = new Description();
+//        description.setText("영화 장르"); //라벨
+//        description.setTextSize(15);
+//        pieChart2.setDescription(description);
+
+        pieChart2.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
+
+        PieDataSet dataSet = new PieDataSet(yValues,"genre");
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
+        PieData data = new PieData((dataSet));
+        data.setValueTextSize(15f);
+        data.setValueTextColor(Color.WHITE);
+
+        pieChart2.setOnChartValueSelectedListener( new OnChartValueSelectedListener() {
+
+            @Override
+            public void onValueSelected(Entry e,Highlight h) {
+
+                pieChart2.setCenterText(e.getY()+"");
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+        pieChart2.setData(data);
     }
     class MyAsyncTask extends AsyncTask<String,Void, ArrayList<ArrayList<String>>> {
         OkHttpClient client = new OkHttpClient();
@@ -195,10 +253,12 @@ public class FragmentStatistic_my extends Fragment {
                 totalTime.setText(showTime+"분동안 영화 관람");
 
                 counts = result.get(1).stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+                peopleCounts = people.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 
                 Log.d("!!Result:", String.valueOf(counts));
 
-                createChart();
+                createChart1();
+                createChart2();
             }
             else{
                 Log.d("null이세요?","null입니다..");
@@ -248,6 +308,7 @@ public class FragmentStatistic_my extends Fragment {
                     userReviews.add(review);
                     Log.d("User val", review.getMovieCode());
                     Log.d("User val", child.child("rating").getValue().toString());
+                    people.add(review.getWithPeople());
 
                 }
                 userReviews.sort(Comparator.reverseOrder());
@@ -268,9 +329,11 @@ public class FragmentStatistic_my extends Fragment {
                 Log.d("출력", String.valueOf(movieCd));
                 myCallback.onCallback(movieCd);
             }
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("fail","datebase 읽어오기 Error");
+
             }
         });
     }

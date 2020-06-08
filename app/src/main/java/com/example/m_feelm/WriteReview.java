@@ -37,10 +37,12 @@ import org.json.simple.parser.JSONParser;
 import java.io.BufferedInputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -56,6 +58,8 @@ public class WriteReview extends AppCompatActivity {
     String mtitle;
     String mposter;
     String movieCode="123";
+    String runTime;
+    MyAsyncTask2 async2;
 
     Calendar myCalendar = Calendar.getInstance();
 
@@ -72,6 +76,7 @@ public class WriteReview extends AppCompatActivity {
         setContentView(R.layout.write_review);
 
         MyAsyncTask async = new MyAsyncTask();
+        async2=new MyAsyncTask2();
         async.execute();
 
         inputDB();
@@ -92,6 +97,7 @@ public class WriteReview extends AppCompatActivity {
         TextView m_date = findViewById(R.id.pubDate);
         ImageView m_poster=findViewById(R.id.moviePoster);
         TextView m_ratingNum=findViewById(R.id.user_rating_num);
+        TextView m_withPeople=findViewById(R.id.withPeople);
 
         m_title.setText(Html.fromHtml(mtitle).toString());
         m_director.setText(mdirector);
@@ -119,7 +125,7 @@ public class WriteReview extends AppCompatActivity {
         EditText date=findViewById(R.id.watchDate);
         date.setOnClickListener(v -> new DatePickerDialog(WriteReview.this, myDatePicker, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        Switch share=findViewById(R.id.reviewShare);
+        //Switch share=findViewById(R.id.reviewShare);
 
         complete_btn.setOnClickListener(v -> {
                     FirebaseUser user;
@@ -131,7 +137,7 @@ public class WriteReview extends AppCompatActivity {
                         String id = user.getUid();
                         RatingBar rating = findViewById(R.id.my_rating);
                         EditText user_review = findViewById(R.id.Myreview);
-                        boolean feedYN = share.isChecked();
+                        //boolean feedYN = share.isChecked();
                         //현재 날짜 구하기
                         Date currentTime = Calendar.getInstance().getTime();
                         String write_date = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(currentTime);
@@ -147,9 +153,14 @@ public class WriteReview extends AppCompatActivity {
                         DatabaseReference newPostRef = postsRef.push();
                         //고유한 키 생성
                         Log.d("코드는?",movieCode);
-                        newPostRef.setValue(new Review(id, mtitle, date.getText().toString(), rating.getRating(), user_review.getText().toString(), feedYN, write_date,movieCode,mposter));
+                        newPostRef.setValue(new Review(id, mtitle, date.getText().toString(), rating.getRating(), user_review.getText().toString(), write_date,movieCode,mposter,m_withPeople.getText().toString(),runTime));
+
                     }
-                }
+
+            finish();
+        }
+
+
         );
     }
     private void updateLabel() {
@@ -197,6 +208,62 @@ public class WriteReview extends AppCompatActivity {
                 Log.d("!!Result:", result);
                 result=result.replace("\"", "");
                 movieCode=result;
+                async2.execute();
+            }
+            else{
+                Log.d("null이세요?","null입니다..");
+            }
+
+        }
+    }
+
+    class MyAsyncTask2 extends AsyncTask<String,Void, String> {
+        OkHttpClient client = new OkHttpClient();
+        @Override
+        protected  String doInBackground(String... parmas) {
+
+            ArrayList<ArrayList<String>> movieInfo=new ArrayList<>();
+            ArrayList<String> showTime=new ArrayList<>();
+            ArrayList<String> genre=new ArrayList<>();
+
+            String url;
+                HttpUrl.Builder urlBuilder = HttpUrl.parse("http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json").newBuilder();
+                urlBuilder.addQueryParameter("key", "2bc022ca249311ee687b6976e45237a4");
+                urlBuilder.addQueryParameter("movieCd", movieCode);
+
+                url = urlBuilder.build().toString();
+
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+
+                try {
+
+                    Response response = client.newCall(request).execute();
+                    JsonParser parser = new JsonParser();
+                    JsonElement rootObject = parser.parse(response.body().charStream())
+                            .getAsJsonObject().get("movieInfoResult").getAsJsonObject().get("movieInfo"); //원하는 항목(?)까지 찾아 들어가야 한다.
+
+
+                    String time=rootObject.getAsJsonObject().get("showTm").toString();
+                    return time;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return "";
+            }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            //요청결과를 여기서 처리한다. 화면에 출력하기등...
+            if(result!=null){
+                Log.d("!!Result:", String.valueOf(result));
+                result.replace("\"", "");
+                runTime=result;
             }
             else{
                 Log.d("null이세요?","null입니다..");
