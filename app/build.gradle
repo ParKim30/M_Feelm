@@ -61,4 +61,7 @@ dependencies {
     implementation 'com.github.PhilJay:MpAndroidChart:v3.0.2'
 
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
+    implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'com.karumi:dexter:5.0.0'
 }
