@@ -66,6 +66,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 .load(item.getImage())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(movieViewHolder.getImage());
+
     }
 
     @Override
