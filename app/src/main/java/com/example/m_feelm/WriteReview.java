@@ -31,6 +31,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.squareup.picasso.Picasso;
 
 
 import org.json.JSONArray;
@@ -60,9 +61,11 @@ public class WriteReview extends AppCompatActivity {
     //Review userReview = null;
     String mtitle;
     String mposter;
+    String mdirector;
     String movieCode="123";
     String runTime;
     MyAsyncTask2 async2;
+    MyAsyncTask3 async3;
 
     Calendar myCalendar = Calendar.getInstance();
 
@@ -78,17 +81,29 @@ public class WriteReview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write_review);
 
+
+
         MyAsyncTask async = new MyAsyncTask();
         async2=new MyAsyncTask2();
         async.execute();
 
+
         inputDB();
 
+        async3 = new MyAsyncTask3();
+        async3.execute();
+
+    }
+    private void inputImg(){
+        ImageView m_poster=findViewById(R.id.moviePoster);
+        if(mposter!=null) {
+            Picasso.get().load(mposter).fit().into(m_poster);
+        }
     }
     private void inputDB(){
         mtitle=getIntent().getStringExtra("title");
         String mrating=getIntent().getStringExtra("rating");
-        String mdirector=getIntent().getStringExtra("director");
+        mdirector=getIntent().getStringExtra("director");
         String mactor=getIntent().getStringExtra("actor");
         String mdate=getIntent().getStringExtra("date");
         mposter=getIntent().getStringExtra("poster");
@@ -98,7 +113,6 @@ public class WriteReview extends AppCompatActivity {
         TextView m_actor = findViewById(R.id.actor);
         RatingBar m_rating= findViewById(R.id.user_rating);
         TextView m_date = findViewById(R.id.pubDate);
-        ImageView m_poster=findViewById(R.id.moviePoster);
         TextView m_ratingNum=findViewById(R.id.user_rating_num);
         TextView m_withPeople=findViewById(R.id.withPeople);
 
@@ -118,9 +132,10 @@ public class WriteReview extends AppCompatActivity {
 //                .load(mposter)
 //                .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                .into(m_poster);
-        Glide.with(this).load(mposter)
-                .dontTransform()
-                .into(m_poster);
+//        Glide.with(this).load(mposter)
+//                .dontTransform()
+//                .into(m_poster);
+
 
 
         Button complete_btn = findViewById(R.id.complete);
@@ -211,7 +226,7 @@ public class WriteReview extends AppCompatActivity {
             super.onPostExecute(result);
             //요청결과를 여기서 처리한다. 화면에 출력하기등...
             if(result!=null){
-                Log.d("!!Result:", result);
+                Log.d("!!Result1:", result);
                 result=result.replace("\"", "");
                 movieCode=result;
                 async2.execute();
@@ -267,9 +282,77 @@ public class WriteReview extends AppCompatActivity {
             super.onPostExecute(result);
             //요청결과를 여기서 처리한다. 화면에 출력하기등...
             if(result!=null){
-                Log.d("!!Result:", String.valueOf(result));
+                Log.d("!!Result2:", String.valueOf(result));
                 result.replace("\"", "");
                 runTime=result;
+            }
+            else{
+                Log.d("null이세요?","null입니다..");
+            }
+
+        }
+    }
+    class MyAsyncTask3 extends AsyncTask<String,Void, String> {
+        OkHttpClient client = new OkHttpClient();
+        @Override
+        protected  String doInBackground(String... parmas) {
+
+            String url;
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp").newBuilder();
+            urlBuilder.addQueryParameter("ServiceKey", "UI6ZF443843L2KV91ZT5");
+            urlBuilder.addQueryParameter("collection", "kmdb_new2");
+            urlBuilder.addQueryParameter("detail", "Y");
+            urlBuilder.addQueryParameter("title", mtitle);
+            urlBuilder.addQueryParameter("director", mdirector);
+            url = urlBuilder.build().toString();
+
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
+            try {
+
+                Response response = client.newCall(request).execute();
+                JsonParser parser = new JsonParser();
+                JsonElement rootObject = parser.parse(response.body().charStream())
+                        .getAsJsonObject().get("Data").getAsJsonArray().get(0).getAsJsonObject().get("Result")
+                        .getAsJsonArray().get(0);//원하는 항목(?)까지 찾아 들어가야 한다.
+
+
+                String poster=rootObject.getAsJsonObject().get("posters").toString();
+                return poster;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            //요청결과를 여기서 처리한다. 화면에 출력하기등...
+            Log.d("!!Result3:", result);
+            if(result!=null){
+                if(result.length()<5){
+
+                }
+                else {
+                    Log.d("!!Result3:", result);
+                    String[] arr = result.split("\\|");
+                    Log.d("!!OMG", arr[0] + "\"");
+
+                    arr[0] = arr[0].substring(1);
+                    if (arr[0].contains("\"")) {
+                        int len = arr[0].length();
+                        mposter = arr[0].substring(0, len - 1);
+                        Log.d("!!OMG2", mposter);
+                    } else mposter = arr[0];
+
+                }
+                inputImg();
             }
             else{
                 Log.d("null이세요?","null입니다..");

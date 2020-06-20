@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -55,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
                     transaction.replace(R.id.frame_layout, fragmentStatisticMy).commitAllowingStateLoss();
                     break;
                 case R.id.menu_feed:
+
                     transaction.replace(R.id.frame_layout, fragmentFeed).commitAllowingStateLoss();
+                    Intent intent=new Intent(getApplicationContext(),FragmentPrint.class);
+                    startActivity(intent);
                     break;
             }
             return true;

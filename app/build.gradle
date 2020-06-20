@@ -64,4 +64,10 @@ dependencies {
 
     implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'com.karumi:dexter:5.0.0'
+
+    implementation 'gun0912.ted:tedpermission:2.0.0'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.HendrixString:Android-PdfMyXml:v1.0.1'
+    implementation group: 'com.itextpdf.tool', name: 'xmlworker', version: '5.5.13'
 }

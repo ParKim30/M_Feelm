@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/moviePoster"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:contentDescription="@string/todo"
             android:adjustViewBounds="true"
             app:layout_constraintBottom_toBottomOf="parent"
