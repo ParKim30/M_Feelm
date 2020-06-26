@@ -4,24 +4,26 @@ public class UserReview implements Comparable<UserReview>{
     private String title;
     private float rating;
     private String id;
-    private boolean FeedYN;
+    //private boolean FeedYN;
     private String UserReview;
     private String watch_Date;
     private String write_Date;
     private String movieCode;
     private String posterUrl;
+    private String withPeople;
 
     public UserReview(){}
-    public UserReview(String title, float rating, String Uid, boolean feedYN, String UserReview, String watchDate, String writeDate,String movieCode,String posterUrl){
+    public UserReview(String title, float rating, String Uid, boolean feedYN, String UserReview, String watchDate, String writeDate,String movieCode,String posterUrl,String withPeople){
         this.title=title;
         this.rating=rating;
         this.id=Uid;
-        this.FeedYN=feedYN;
+        //this.FeedYN=feedYN;
         this.UserReview=UserReview;
         this.watch_Date=watchDate;
         this.write_Date=writeDate;
         this.movieCode=movieCode;
         this.posterUrl=posterUrl;
+        this.withPeople=withPeople;
     }
 
     public void setMovieCd(String movieCd) {
@@ -40,8 +42,16 @@ public class UserReview implements Comparable<UserReview>{
         this.posterUrl = posterUrl;
     }
 
-    public void setFeedYN(boolean feedYN) {
+    /*public void setFeedYN(boolean feedYN) {
         FeedYN = feedYN;
+    }*/
+
+    public void setWithPeople(String withPeople) {
+        this.withPeople = withPeople;
+    }
+
+    public String getWithPeople() {
+        return withPeople;
     }
 
     public void setId(String id) {
