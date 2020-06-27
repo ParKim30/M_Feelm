@@ -39,6 +39,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     // 이메일과 비밀번호
     private EditText editTextEmail;
     private EditText editTextPassword;
+    private EditText editTextCheckPassword;
     private Button signUpBtn;
     ProgressDialog progressDialog;
 
@@ -53,6 +54,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         editTextEmail = (EditText)findViewById(R.id.et_email);
         editTextPassword = (EditText)findViewById(R.id.et_password);
+        editTextCheckPassword=(EditText)findViewById(R.id.check_password);
         signUpBtn = (Button)findViewById(R.id.sign_up_btn);
         progressDialog = new ProgressDialog(this);
 
@@ -64,12 +66,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void registerUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        String check_password = editTextCheckPassword.getText().toString().trim();
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, "Email을 입력해 주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Password를 입력해 주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(password!=check_password) {
+            Toast.makeText(this,"비밀번호가 일치하지 않습니다.",Toast.LENGTH_SHORT).show();
+            return;
         }
 
         //email과 password가 제대로 입력되어 있다면 계속 진행된다.
