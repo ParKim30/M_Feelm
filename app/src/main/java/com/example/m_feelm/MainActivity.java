@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentSearch fragmentSearch = new FragmentSearch();
     private FragmentFeelm fragmentFeelm = new FragmentFeelm();
     private FragmentStatistic fragmentStatistic = new FragmentStatistic();
-    private FragmentFeed fragmentFeed = new FragmentFeed();
+    //private FragmentFeed fragmentFeed = new FragmentFeed();
     private FragmentStatistic_my fragmentStatisticMy=new FragmentStatistic_my();
 
 
@@ -55,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.menu_statistic:
                     transaction.replace(R.id.frame_layout, fragmentStatisticMy).commitAllowingStateLoss();
                     break;
-                case R.id.menu_feed:
-
-                    transaction.replace(R.id.frame_layout, fragmentFeed).commitAllowingStateLoss();
-                    Intent intent=new Intent(getApplicationContext(),FragmentPrint.class);
-                    startActivity(intent);
-                    break;
+//                case R.id.menu_feed:
+//
+//                    transaction.replace(R.id.frame_layout, fragmentFeed).commitAllowingStateLoss();
+//                    Intent intent=new Intent(getApplicationContext(),FragmentPrint.class);
+//                    startActivity(intent);
+//                    break;
             }
             return true;
         }

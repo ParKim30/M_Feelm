@@ -1,21 +1,32 @@
 package com.example.m_feelm;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.PopupWindowCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
@@ -34,6 +45,7 @@ import com.google.gson.JsonParser;
 import com.squareup.picasso.Picasso;
 
 
+import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -47,13 +59,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.zip.Inflater;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class WriteReview extends AppCompatActivity {
+public class WriteReview extends Activity {
 
     DatabaseReference mDBReference = null;
     HashMap<String, Object> childUpdates = null;
@@ -64,8 +77,11 @@ public class WriteReview extends AppCompatActivity {
     String mdirector;
     String movieCode="123";
     String runTime;
+    FlowLayout fl;
     MyAsyncTask2 async2;
     MyAsyncTask3 async3;
+
+    PopupWindow mPopupWindow;
 
     Calendar myCalendar = Calendar.getInstance();
 
@@ -108,17 +124,56 @@ public class WriteReview extends AppCompatActivity {
         String mdate=getIntent().getStringExtra("date");
         mposter=getIntent().getStringExtra("poster");
 
+        mactor = mactor.replace("|","/");
+        String[] actors = mactor.split("/");
+
+        for(int i=0; i<actors.length; i++)
+            System.out.println(actors[i]);
+
         TextView m_title = findViewById(R.id.title);
         TextView m_director = findViewById(R.id.director);
-        TextView m_actor = findViewById(R.id.actor);
+        //TextView m_actor = findViewById(R.id.actor);
+        FlowLayout fl = findViewById(R.id.flowlayout);
         RatingBar m_rating= findViewById(R.id.user_rating);
         TextView m_date = findViewById(R.id.pubDate);
         TextView m_ratingNum=findViewById(R.id.user_rating_num);
         TextView m_withPeople=findViewById(R.id.withPeople);
 
+        TextView[] at = new TextView[actors.length];
+        Button[] bt = new Button[actors.length];
+
+        for(int i=0; i<actors.length-1; i++)
+        {
+            //at[i]= new TextView(this);
+            String name;
+            bt[i]=new Button(this);
+            //bt[i].setBackground(ContextCompat.getDrawable(this, R.drawable.actor_btn_shape));
+            bt[i].setClickable(true);
+            bt[i].setTextSize(13);
+            bt[i].setBackgroundColor(000);
+            bt[i].setText("#"+actors[i]);
+            fl.addView(bt[i]);
+            name = bt[i].getText().toString();
+            bt[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(WriteReview.this,ActorInfoPopup.class);
+                    intent.putExtra("actorNm",name);
+                    startActivityForResult(intent,1);
+//                    View popupView = getLayoutInflater().inflate(R.layout.actor_popup_info, null);
+//                    mPopupWindow = new PopupWindow(popupView,1300, 2100);
+//                    mPopupWindow.setFocusable(true);
+//                    mPopupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("actorNm",name);
+                    System.out.println("success");
+                }
+            });
+        }
+
         m_title.setText(Html.fromHtml(mtitle).toString());
         m_director.setText(mdirector);
-        m_actor.setText(mactor);
+        //m_actor.setText(mactor);
         m_rating.setRating(Float.parseFloat(mrating) / 2);
         m_date.setText(mdate);
 
