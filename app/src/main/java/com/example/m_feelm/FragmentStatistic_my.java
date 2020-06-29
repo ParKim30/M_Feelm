@@ -243,6 +243,7 @@ public class FragmentStatistic_my extends Fragment {
             super.onPostExecute(result);
             //요청결과를 여기서 처리한다. 화면에 출력하기등...
             if(result!=null){
+                showTime=0;
                 Log.d("!!Result:", String.valueOf(result.get(0)));
                 for(int i=0;i<result.get(0).size();i++){
                     result.get(0).set(i,result.get(0).get(i).replace("\"", ""));
@@ -286,6 +287,7 @@ public class FragmentStatistic_my extends Fragment {
             readData(new MyCallback(){
                 @Override
                 public void onCallback(ArrayList<String> value) {
+                    mCd.clear();
                     Log.d("출력2", String.valueOf(value));
                     mCd.addAll(value);
                     Log.d("출력3", String.valueOf(mCd));

@@ -1,65 +1,40 @@
 package com.example.m_feelm;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.PopupWindowCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.squareup.picasso.Picasso;
 
 
 import org.apmem.tools.layouts.FlowLayout;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.io.BufferedInputStream;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.zip.Inflater;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -135,7 +110,7 @@ public class WriteReview extends Activity {
         //TextView m_actor = findViewById(R.id.actor);
         FlowLayout fl = findViewById(R.id.flowlayout);
         RatingBar m_rating= findViewById(R.id.user_rating);
-        TextView m_date = findViewById(R.id.pubDate);
+        TextView m_date = findViewById(R.id.watchDate);
         TextView m_ratingNum=findViewById(R.id.user_rating_num);
         TextView m_withPeople=findViewById(R.id.withPeople);
 

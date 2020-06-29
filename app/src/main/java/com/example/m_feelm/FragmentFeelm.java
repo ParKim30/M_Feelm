@@ -51,7 +51,9 @@ public class FragmentFeelm extends Fragment {
         viewPager.setAdapter(new FeelmPagerAdapter(context, userReviews));
         viewPager.setClipToPadding(false);
         viewPager.setClipChildren(false);
+        viewPager.setPageMargin(150);
         viewPager.setOffscreenPageLimit(3);
+
 
         viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override

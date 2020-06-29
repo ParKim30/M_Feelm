@@ -6,11 +6,11 @@ import java.util.Map;
 public class Review {
     public String id;
     public String title;
-    public String watch_date;
+    public String watchDate;
     public float rating;
-    public String user_review;
+    public String userReview;
     //public boolean feedYN;
-    public String write_date;
+    public String writeDate;
     public String movieCode;
     public String posterUrl;
     public String withPeople;
@@ -24,11 +24,11 @@ public class Review {
     public Review(String id, String title,String watch_date,float rating,String user_review,String write_date,String movieCode,String posterUrl,String withPeople,String time) {
         this.id = id;
         this.title = title;
-        this.watch_date = watch_date;
+        this.watchDate = watch_date;
         this.rating = rating;
-        this.user_review = user_review;
+        this.userReview = user_review;
         //this.feedYN = feedYN;
-        this.write_date = write_date;
+        this.writeDate = write_date;
         this.movieCode=movieCode;
         this.posterUrl=posterUrl;
         this.withPeople=withPeople;
@@ -39,11 +39,11 @@ public class Review {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", id);
         result.put("title", title);
-        result.put("watch_date", watch_date);
+        result.put("watchDate", watchDate);
         result.put("rating", rating);
-        result.put("user_review", user_review);
+        result.put("userReview", userReview);
         //result.put("feedYN", feedYN);
-        result.put("write_date", write_date);
+        result.put("writeDate", writeDate);
         result.put("movieCode", movieCode);
         result.put("posterUrl",posterUrl);
         return result;
