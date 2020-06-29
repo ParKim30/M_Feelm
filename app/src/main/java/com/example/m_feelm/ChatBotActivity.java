@@ -1,6 +1,8 @@
 package com.example.m_feelm;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
@@ -11,10 +13,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +29,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+
+import org.apmem.tools.layouts.FlowLayout;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,12 +42,13 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import okhttp3.OkHttpClient;
 
 public class ChatBotActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
-    private LinearLayout btn_wrapper;
+    private FlowLayout btn_wrapper;
     private ChatAdapter mAdapter;
     private ArrayList messageArrayList;
     private boolean initialRequest;
@@ -48,8 +56,18 @@ public class ChatBotActivity extends AppCompatActivity{
     private static String TAG = "ChatBotActivity";
     private Context mContext;
     String genre_txt[] = {"드라마","코메디","액션","로맨스","스릴러","공포","범죄","판타지","SF","애니메이션"};
+    String nation_txt[]={"뉴질랜드","대만","대한민국","미국","멕시코","베트남","싱가포르","스페인","일본","영국","중국","태국","필리핀","없음"};
+    String yesno_txt[]={"있음","없음"};
+    String yesno_date_txt[]={"개봉시기 선택","잘 모르겠어요"};
     Button genre_list_btn[]=new Button[10];
+    Button nation_list_btn[]=new Button[14];
+    Button yesno_btn[]=new Button[2];
+    Button yesno_date_btn[]=new Button[2];
+
     String text;
+    String nation_text;
+    String like_actor_text;
+    String date_text;
     StatisticMovieItem[] posts = new StatisticMovieItem[10];
 
     @Override
@@ -76,6 +94,7 @@ public class ChatBotActivity extends AppCompatActivity{
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+        recyclerView.scrollToPosition(mAdapter.getItemCount());
         this.initialRequest = true;
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +128,7 @@ public class ChatBotActivity extends AppCompatActivity{
         drawable.setStroke(5, Color.rgb(250,100,0));
         drawable.setColor(Color.WHITE);
         drawable.setCornerRadius(50.0f);
-        drawable.setSize(150,50);
+        //drawable.setSize(50,50);
         // 버튼 생성
         Button fit_btn = new Button(this);
         fit_btn.setText("맞춤 영화 추천");
@@ -129,10 +148,39 @@ public class ChatBotActivity extends AppCompatActivity{
         genre_list_btn = new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()),
                 new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext())};
 
+        nation_list_btn=new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()),
+                new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()),
+                new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()),new Button(getApplicationContext())};
+
+        yesno_btn=new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext())};
+
+        yesno_date_btn=new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext())};
+
         for(int i=0; i<10; i++) {
             genre_list_btn[i].setText(genre_txt[i]);
-            genre_list_btn[i].setBackgroundDrawable(drawable);
-            genre_list_btn[i].setLayoutParams(lp);
+            //genre_list_btn[i].setBackgroundDrawable(drawable);
+            //genre_list_btn[i].setLayoutParams(lp);
+        }
+
+        for(int i=0; i<14;i++)
+        {
+            nation_list_btn[i].setText(nation_txt[i]);
+            //nation_list_btn[i].setBackgroundDrawable(drawable);
+            //nation_list_btn[i].setLayoutParams(lp);
+        }
+
+        for(int i=0; i<2;i++)
+        {
+            yesno_btn[i].setText(yesno_txt[i]);
+            //nation_list_btn[i].setBackgroundDrawable(drawable);
+            //nation_list_btn[i].setLayoutParams(lp);
+        }
+
+        for(int i=0; i<2;i++)
+        {
+            yesno_date_btn[i].setText(yesno_date_txt[i]);
+            //nation_list_btn[i].setBackgroundDrawable(drawable);
+            //nation_list_btn[i].setLayoutParams(lp);
         }
 
         //
@@ -185,26 +233,242 @@ public class ChatBotActivity extends AppCompatActivity{
                     messageArrayList.add(outMessage);
                     btn_wrapper.removeAllViews();
 
-                    Message inputMessage = new Message();
-                    inputMessage.setMessage(button.getText().toString()+" 영화 추천을 시작합니다.");
-                    inputMessage.setId("100");
-                    messageArrayList.add(inputMessage);
-
                     //영화추천
                     //getMovies(button.getText().toString());
                     text = button.getText().toString();
 
-                    MyAsyncTask async = new MyAsyncTask();
-                    async.execute();
+                    /*Message inputMessage = new Message();
+                    inputMessage.setMessage(button.getText().toString()+" 영화 추천을 시작합니다.");
+                    inputMessage.setId("100");
+                    messageArrayList.add(inputMessage);*/
+
+                    Message inputMessage = new Message();
+                    inputMessage.setMessage("어느 나라의 영화를 원하시나요?");
+                    inputMessage.setId("100");
+                    messageArrayList.add(inputMessage);
+
+                    for(int i=0;i<14;i++){
+                        btn_wrapper.addView(nation_list_btn[i]);
+                    }
+
+                    /*MyAsyncTask async = new MyAsyncTask();
+                    async.execute();*/
 
                     backgroundThread();
                 }
             });
         }
 
+        for(int i=0;i<nation_list_btn.length; i++){
+            final Button button = nation_list_btn[i];
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Message outMessage = new Message();
+                    outMessage.setMessage(button.getText().toString());
+                    System.out.println(outMessage.getMessage());
+                    outMessage.setId("1");
+                    messageArrayList.add(outMessage);
+                    btn_wrapper.removeAllViews();
+
+                    //선택한 나라 text
+                    //getMovies(button.getText().toString());
+                    nation_text = button.getText().toString();
+
+                    Message inputMessage = new Message();
+                    inputMessage.setMessage("선호하는 배우가 있으신가요?");
+                    inputMessage.setId("100");
+                    messageArrayList.add(inputMessage);
+
+                    for(int i=0;i<2;i++){
+                        btn_wrapper.addView(yesno_btn[i]);
+                    }
+
+                    /*MyAsyncTask async = new MyAsyncTask();
+                    async.execute();*/
+
+                    backgroundThread();
+                }
+            });
+        }
+
+        for(int i=0;i<yesno_btn.length; i++){
+            final Button button = yesno_btn[i];
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(button.getText().toString()=="있음")
+                    {
+                        AlertDialog.Builder ad = new AlertDialog.Builder(ChatBotActivity.this);
+
+                        ad.setTitle("선호하는 배우를 입력해주세요");       // 제목 설정
+
+                        final EditText et = new EditText(ChatBotActivity.this);
+                        ad.setView(et);
+
+                        // 확인 버튼 설정
+                        ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.v(TAG, "Yes Btn Click");
+
+                                // Text 값 받아서 로그 남기기
+                                like_actor_text = et.getText().toString();
+                                Log.v(TAG, like_actor_text);
+                                System.out.println(like_actor_text);
+
+                                dialog.dismiss();     //닫기
+                                // Event
+
+                                Message outMessage = new Message();
+                                outMessage.setMessage(like_actor_text);
+                                System.out.println(outMessage.getMessage());
+                                outMessage.setId("1");
+                                messageArrayList.add(outMessage);
+                                btn_wrapper.removeAllViews();
+
+                                Message inputMessage = new Message();
+                                inputMessage.setMessage("언제 개봉한 영화를 원하시나요?");
+                                inputMessage.setId("100");
+                                messageArrayList.add(inputMessage);
+
+                                for(int i=0;i<2;i++){
+                                    btn_wrapper.addView(yesno_date_btn[i]);
+                                }
+                            }
+                        });
+
+                        // 취소 버튼 설정
+                        ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.v(TAG,"No Btn Click");
+                                dialog.dismiss();     //닫기
+                                // Event
+                            }
+                        });
+
+                        ad.show();
+                    }else if(button.getText().toString()=="없음")
+                    {
+                        like_actor_text="없음";
+                        Message outMessage = new Message();
+                        outMessage.setMessage(like_actor_text);
+                        System.out.println(outMessage.getMessage());
+                        outMessage.setId("1");
+                        messageArrayList.add(outMessage);
+                        btn_wrapper.removeAllViews();
+
+                        Message inputMessage = new Message();
+                        inputMessage.setMessage("언제 개봉한 영화를 원하시나요?");
+                        inputMessage.setId("100");
+                        messageArrayList.add(inputMessage);
+
+                        for(int i=0;i<2;i++){
+                            btn_wrapper.addView(yesno_date_btn[i]);
+                        }
+                    }
+
+
+
+                    backgroundThread();
+                }
+            });
+        }
+
+        for(int i=0;i<yesno_date_btn.length; i++){
+            final Button button = yesno_date_btn[i];
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(button.getText().toString()=="개봉시기 선택") {
+                        /*Calendar calendar = Calendar.getInstance();
+                        int year = calendar.get(Calendar.YEAR);
+
+                        AlertDialog.Builder ad = new AlertDialog.Builder(ChatBotActivity.this);
+
+                        final NumberPicker numberPicker = new NumberPicker(getApplicationContext());
+                        numberPicker.setMinValue(year-100);
+                        numberPicker.setMaxValue(year);
+                        numberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+                        numberPicker.setWrapSelectorWheel(false);
+                        numberPicker.setValue(year);
+
+                        ad.setView(numberPicker);*/
+                        AlertDialog.Builder ad = new AlertDialog.Builder(ChatBotActivity.this);
+                        ad.setTitle("개봉한 시기(년도)를 입력해주세요");       // 제목 설정
+
+                        final EditText et = new EditText(ChatBotActivity.this);
+                        ad.setView(et);
+                        // 확인 버튼 설정
+                        ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.v(TAG, "Yes Btn Click");
+
+                                // Text 값 받아서 로그 남기기
+                                //date_text = Integer.toString(numberPicker.getValue());
+                                date_text = et.getText().toString();
+
+                                Log.v(TAG, date_text);
+                                System.out.println("연도 : "+date_text);
+
+                                dialog.dismiss();     //닫기
+                                // Event
+
+                                Message outMessage = new Message();
+                                outMessage.setMessage(date_text);
+                                System.out.println(outMessage.getMessage());
+                                outMessage.setId("1");
+                                messageArrayList.add(outMessage);
+                                btn_wrapper.removeAllViews();
+
+                                Message inputMessage = new Message();
+                                inputMessage.setMessage("영화추천을 시작합니다");
+                                inputMessage.setId("100");
+                                messageArrayList.add(inputMessage);
+                            }
+                        });
+
+                        // 취소 버튼 설정
+                        ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.v(TAG,"No Btn Click");
+                                dialog.dismiss();     //닫기
+                                // Event
+                            }
+                        });
+
+                        ad.show();
+
+
+                    } else if(button.getText().toString()=="잘 모르겠어요")
+                    {
+                        date_text="없음";
+
+                        Message outMessage = new Message();
+                        outMessage.setMessage(date_text);
+                        System.out.println(outMessage.getMessage());
+                        outMessage.setId("1");
+                        messageArrayList.add(outMessage);
+                        btn_wrapper.removeAllViews();
+
+                        Message inputMessage = new Message();
+                        inputMessage.setMessage("영화추천을 시작합니다");
+                        inputMessage.setId("100");
+                        messageArrayList.add(inputMessage);
+                    }
+
+                    backgroundThread();
+                }
+            });
+        }
 
         backgroundThread();
     }
+
+
 
     private void backgroundThread(){
         Thread thread = new Thread(new Runnable() {

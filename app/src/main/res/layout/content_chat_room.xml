@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
         android:layout_marginBottom="50dp"
+        android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -55,11 +56,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="530dp">
 
-        <LinearLayout
+        <org.apmem.tools.layouts.FlowLayout
             android:id="@+id/choice_btn_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="horizontal" />
     </ScrollView>
 
     <!--    <LinearLayout-->
