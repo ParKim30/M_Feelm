@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected Activity activity;
     private int SELF = 100;
+    private int BOT = 200;
     private ArrayList<Message> messageArrayList;
 
     public ChatAdapter(ArrayList<Message> messageArrayList) {
@@ -34,12 +35,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // self message
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.chat_item_self, parent, false);
-        } else {
+        } else if(viewType==BOT){
             // WatBot message
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.chat_item_watson, parent, false);
+        }else{
+            // image message
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.chat_item_image, parent, false);
         }
-
 
         return new ViewHolder(itemView);
     }
@@ -49,6 +53,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Message message = messageArrayList.get(position);
         if (message.getId() != null && message.getId().equals("1")) {
             return SELF;
+        }
+        if(message.getId() != null && message.getId().equals("100")){
+            return BOT;
         }
 
         return position;
@@ -62,11 +69,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ((ViewHolder) holder).message.setText(message.getMessage());
                 break;
             case IMAGE:
-                ((ViewHolder) holder).message.setVisibility(View.GONE);
+                ((ViewHolder) holder).message.setText(message.getTitle());
                 ImageView iv = ((ViewHolder) holder).image;
                 Glide
                         .with(iv.getContext())
                         .load(message.getUrl())
+                        .fitCenter()
                         .into(iv);
         }
     }

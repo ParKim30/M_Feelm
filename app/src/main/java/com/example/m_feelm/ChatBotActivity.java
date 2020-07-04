@@ -1,6 +1,6 @@
 package com.example.m_feelm;
 
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,17 +17,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.m_feelm.model.Item;
+import com.example.m_feelm.model.Movie;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -42,9 +53,11 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatBotActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
@@ -53,13 +66,17 @@ public class ChatBotActivity extends AppCompatActivity{
     private ArrayList messageArrayList;
     private boolean initialRequest;
     private ImageButton back_btn;
+    ProgressDialog progressDialog;
     private static String TAG = "ChatBotActivity";
     private Context mContext;
-    String genre_txt[] = {"드라마","코메디","액션","로맨스","스릴러","공포","범죄","판타지","SF","애니메이션"};
+    String genre_txt[] = {"코메디","액션","로맨스","스릴러","공포","판타지","SF","아동"};
     String nation_txt[]={"뉴질랜드","대만","대한민국","미국","멕시코","베트남","싱가포르","스페인","일본","영국","중국","태국","필리핀","없음"};
     String yesno_txt[]={"있음","없음"};
     String yesno_date_txt[]={"개봉시기 선택","잘 모르겠어요"};
-    Button genre_list_btn[]=new Button[10];
+
+    private ArrayList<String> myMovieTitle=new ArrayList<>();
+
+    Button genre_list_btn[]=new Button[9];
     Button nation_list_btn[]=new Button[14];
     Button yesno_btn[]=new Button[2];
     Button yesno_date_btn[]=new Button[2];
@@ -68,7 +85,12 @@ public class ChatBotActivity extends AppCompatActivity{
     String nation_text;
     String like_actor_text;
     String date_text;
+    int tot_number;
+    int rand_number;
     StatisticMovieItem[] posts = new StatisticMovieItem[10];
+    String[] result_text= new String[5];
+    ArrayList<String> arrayList = new ArrayList<>();
+    MyAsyncTask2 task2 = new MyAsyncTask2();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +107,7 @@ public class ChatBotActivity extends AppCompatActivity{
         recyclerView = findViewById(R.id.recycler_view);
         btn_wrapper = findViewById(R.id.choice_btn_wrapper);
         back_btn = findViewById(R.id.back_btn);
+        progressDialog = new ProgressDialog(this);
 
         messageArrayList = new ArrayList<>();
         mAdapter = new ChatAdapter(messageArrayList);
@@ -104,10 +127,38 @@ public class ChatBotActivity extends AppCompatActivity{
             }
         });
 
+        //db에 있는 영화제목들 가져오는 함수
+        setMyMovieTitleText();
         sendMessage();
 
         backgroundThread();
 
+    }
+
+    private void setMyMovieTitleText()
+    {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mReference=mDatabase.getReference("User_review");
+
+        mReference.orderByChild("id").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                myMovieTitle.clear();
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    UserReview review=child.getValue(UserReview.class);
+                    myMovieTitle.add(review.getTitle());
+                    Log.d("User val", review.getTitle());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("fail","datebase 읽어오기 Error");
+            }
+        });
     }
 
     private void sendMessage(){
@@ -146,7 +197,7 @@ public class ChatBotActivity extends AppCompatActivity{
         genre_btn.setLayoutParams(lp);
 
         genre_list_btn = new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()),
-                new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext())};
+                new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext())};
 
         nation_list_btn=new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()),
                 new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()),
@@ -156,7 +207,7 @@ public class ChatBotActivity extends AppCompatActivity{
 
         yesno_date_btn=new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext())};
 
-        for(int i=0; i<10; i++) {
+        for(int i=0; i<8; i++) {
             genre_list_btn[i].setText(genre_txt[i]);
             //genre_list_btn[i].setBackgroundDrawable(drawable);
             //genre_list_btn[i].setLayoutParams(lp);
@@ -196,7 +247,10 @@ public class ChatBotActivity extends AppCompatActivity{
             outMessage.setId("1");
             messageArrayList.add(outMessage);
             btn_wrapper.removeAllViews();
-            backgroundThread();
+
+            //내 db에 있는 영화제목들 가져오기
+
+           backgroundThread();
         }
         });
 
@@ -214,7 +268,7 @@ public class ChatBotActivity extends AppCompatActivity{
                 inputMessage.setId("100");
                 messageArrayList.add(inputMessage);
 
-                for(int i=0;i<10;i++){
+                for(int i=0;i<genre_list_btn.length;i++){
                     btn_wrapper.addView(genre_list_btn[i]);
                 }
                 backgroundThread();
@@ -424,9 +478,15 @@ public class ChatBotActivity extends AppCompatActivity{
                                 btn_wrapper.removeAllViews();
 
                                 Message inputMessage = new Message();
-                                inputMessage.setMessage("영화추천을 시작합니다");
+                                inputMessage.setMessage("영화 추천을 시작합니다");
                                 inputMessage.setId("100");
                                 messageArrayList.add(inputMessage);
+
+                                progressDialog.setMessage("추천중입니다. 기다려 주세요...");
+                                progressDialog.show();
+
+                                MyAsyncTask async = new MyAsyncTask();
+                                async.execute();
                             }
                         });
 
@@ -455,9 +515,17 @@ public class ChatBotActivity extends AppCompatActivity{
                         btn_wrapper.removeAllViews();
 
                         Message inputMessage = new Message();
-                        inputMessage.setMessage("영화추천을 시작합니다");
+                        inputMessage.setMessage("영화 추천을 시작합니다");
                         inputMessage.setId("100");
                         messageArrayList.add(inputMessage);
+
+                        progressDialog.setMessage("추천중입니다. 기다려 주세요...");
+                        progressDialog.show();
+
+                        MyAsyncTask async = new MyAsyncTask();
+                        async.execute();
+
+
                     }
 
                     backgroundThread();
@@ -494,17 +562,31 @@ public class ChatBotActivity extends AppCompatActivity{
         thread.start();
     }
 
+
     // 영화 가져오기
-    class MyAsyncTask extends AsyncTask<String,Void,StatisticMovieItem[]> {
+    class MyAsyncTask extends AsyncTask<String,Void, Integer> {
         OkHttpClient client = new OkHttpClient();
         @Override
-        protected StatisticMovieItem[] doInBackground(String... parmas) {
-//http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?ServiceKey=UI6ZF443843L2KV91ZT5&genre
+        protected Integer doInBackground(String... parmas) {
+        //http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?ServiceKey=UI6ZF443843L2KV91ZT5&genre
             StringBuilder urlBuilder = new StringBuilder("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json.jsp?collection=kmdb_new");
             //HttpUrl.Builder urlBuilder = HttpUrl.parse("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp").newBuilder();
             try {
                 urlBuilder.append("&"+ URLEncoder.encode("ServiceKey","UTF-8")+"=UI6ZF443843L2KV91ZT5");
-                urlBuilder.append("&"+ URLEncoder.encode("genre","UTF-8")+"="+URLEncoder.encode(text,"UTF-8")+"&"+URLEncoder.encode("listCount","UTF-8")+"=1000");
+                urlBuilder.append("&"+ URLEncoder.encode("genre","UTF-8")+"="+URLEncoder.encode(text,"UTF-8")+"&"+URLEncoder.encode("listCount","UTF-8")+"=1000"+"&"+URLEncoder.encode("ratedYn","UTF-8")+"=Y");
+                if(nation_text!="없음")
+                {
+                    urlBuilder.append("&"+ URLEncoder.encode("nation","UTF-8")+"="+URLEncoder.encode(nation_text,"UTF-8"));
+                }
+                if(like_actor_text!="없음")
+                {
+                    urlBuilder.append("&"+ URLEncoder.encode("actor","UTF-8")+"="+URLEncoder.encode(like_actor_text,"UTF-8"));
+                }
+                if(date_text!="없음")
+                {
+                    urlBuilder.append("&"+ URLEncoder.encode("createDte","UTF-8")+"="+URLEncoder.encode(date_text,"UTF-8"));
+                }
+
                 URL url = new URL(urlBuilder.toString());
                 System.out.println(url);
 
@@ -530,6 +612,7 @@ public class ChatBotActivity extends AppCompatActivity{
                     }
                     sb.append(line);
                 }
+
                 rd.close();
                 conn.disconnect();
                 String str = sb.toString();
@@ -539,7 +622,11 @@ public class ChatBotActivity extends AppCompatActivity{
                 JsonElement element = (parser.parse(str)).getAsJsonObject().get("Data").getAsJsonArray().get(0).getAsJsonObject().get("Result");
                 Gson gson = new Gson();
                 posts = gson.fromJson(element, StatisticMovieItem[].class);
-                return posts;
+                if(posts==null){
+                    return 0;
+                }
+                return posts.length;
+
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
             } catch (ProtocolException ex) {
@@ -550,55 +637,152 @@ public class ChatBotActivity extends AppCompatActivity{
                 ex.printStackTrace();
             }
 
-
-//            Request request = new Request.Builder()
-//                    .url(url)
-//                    .build();
-//            try {
-//                Response response = client.newCall(request).execute();
-//                Gson gson = new GsonBuilder().create();
-//                JsonParser parser = new JsonParser();
-//                //제공되는 오픈API데이터에서 어떤 항목을 가여올지 설정해야 하는데.... 음~
-//                JsonElement rootObject = parser.parse(response.body().charStream())
-//                        .getAsJsonObject().get("Data").getAsJsonObject().get("Result"); //원하는 항목(?)까지 찾아 들어가야 한다.
-//                Log.d("result:",rootObject.getAsString());
-//                StatisticMovieItem[] posts;
-//                posts = gson.fromJson(rootObject, StatisticMovieItem[].class);
-//                return posts;
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-
-            return null;
+            return 0;
         }
 
-        @Override
-        protected void onPostExecute(StatisticMovieItem[] result) {
+
+        protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
             //요청결과를 여기서 처리한다. 화면에 출력하기등...
-            if(result!=null){
-                int j=0;
-                for (StatisticMovieItem post: result){
-                    if(j<2){
-                        System.out.println(post.getMovieNm());
-                        System.out.println(post.getImage());
-                        j++;
-                        Message inputMessage = new Message();
-                        inputMessage.setId("100");
-                        inputMessage.setMessage(post.getMovieNm());
-                        messageArrayList.add(inputMessage);
-                        System.out.println(post.getImage());
-                        if(post.getImage()!=null) {
-                            Message inputMessage2 = new Message(post.getImage());
-                            messageArrayList.add(inputMessage2);
-                        }
+            if(result!=0){
+                tot_number=result;
+                System.out.println("tot_number : "+tot_number);
+                rand_number = (int)(Math.random()*(tot_number-5));
+                System.out.println("random : "+rand_number);
 
+                if(tot_number<=5){
+                    //총 개수가 5개가 넘지 않을 때 처리
+                    rand_number=0;
+                    for (int i=rand_number;i<tot_number;i++){
+                        //ArrayList에 result 값을 넣어주기
+                        if(posts[i].getMovieNm()!=null) {
+                            result_text[i]=(posts[i].getMovieNm());
+
+                            //System.out.println(posts[i].getMovieNm());
+                            //System.out.println(posts[i].getImage());
+                            //Message inputMessage = new Message();
+                            //inputMessage.setId("100");
+                            //inputMessage.setMessage(posts[i].getMovieNm());
+                            //messageArrayList.add(inputMessage);
+                            //System.out.println("fail" + posts[i].getImage());
+                            /*if (posts[i].getImage() != null) {
+                                Message inputMessage2 = new Message(posts[i].getImage());
+                                messageArrayList.add(inputMessage2);
+                            }*/
+                        }
                     }
+                }else {
+                    int cnt=0;
+                    for (int i = rand_number; i < rand_number + 5; i++) {
+                        //ArrayList에 result 값을 넣어주기
+                        if (posts[i].getMovieNm() != null) {
+                            result_text[cnt]=(posts[i].getMovieNm());
+                            cnt++;
+                        }
+                        /*if (posts[i].getImage() != null) {
+                            Message inputMessage2 = new Message(posts[i].getImage());
+                            messageArrayList.add(inputMessage2);
+                        }*/
+                    }
+
                 }
 
+                System.out.println(result_text.length);
+
+                for(int i=0; i<result_text.length; ++i)
+                {
+                    System.out.println(result_text[i]);
+                }
+
+                //naver poster 가져오는거 다시해보기
+                task2.execute();
+
+
+            }
+            if(result==0)
+            {
+                Message inputMessage = new Message();
+                inputMessage.setMessage("추천 결과가 없습니다.");
+                inputMessage.setId("100");
+                messageArrayList.add(inputMessage);
             }
             backgroundThread();
         }
+    }
+
+    public String removeTag(String html) throws Exception {
+        return html.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "");
+    }
+
+    public class MyAsyncTask2 extends AsyncTask<Void,Void,Void>{
+        ArrayList<Item> movies;
+        Item item;
+        // 영화 가져오기
+        public void getMovies(final String title, int position) {
+            ApiInterface apiInterface = ServiceGenerator.createService(ApiInterface.class);
+            Call<Movie> call = apiInterface.getMovies(title, 50, 1);
+            call.enqueue(new Callback<Movie>() {
+                @Override
+                public void onResponse(@NonNull Call<Movie> call, @NonNull retrofit2.Response<Movie> response) {
+                    if(response.isSuccessful()) {
+                        movies = new ArrayList(response.body().getItems());
+                        //!!!!!!!제목에 맞게 포스터 나오게 해야함!
+                        //item=movies.get(0);
+                        /*for(int i=0; i<movies.size(); i++)
+                        {
+                            System.out.println(i+movies.get(i).getTitle());
+                        }*/
+                        int i=0;
+                        while(i<movies.size()){
+                            item = movies.get(i);
+                            try {
+                                String getTitle = removeTag(item.getTitle());
+                                getTitle = getTitle.replaceAll(" ","");
+                                item.setTitle(getTitle);
+                                System.out.println("getTitle:"+getTitle);
+                                System.out.println("kmdbTitle:"+title.replaceAll(" ",""));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            System.out.println(item.getTitle().equals(title.replaceAll(" ","")));
+                            if(item.getTitle().equals(title.replaceAll(" ",""))){
+                                System.out.println("ㅁㅁㅁ"+title);
+                                if(!(item.getImage().equals(""))) {
+                                    Message inputMessage2 = new Message(item.getImage(), title);
+                                    inputMessage2.setId("300");
+                                    messageArrayList.add(inputMessage2);
+                                }
+                                break;
+                            }else{
+                                i++;
+                            }
+                        }
+
+                        backgroundThread();
+                        arrayList.add(item.getImage());
+                    }else{
+                        Log.e(TAG, response.message());
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
+                    Log.e(TAG, t.getMessage());
+                }
+            });
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            progressDialog.dismiss();
+
+            for(int i=0;i<result_text.length; i++){
+                getMovies(result_text[i],i+1);
+            }
+
+
+            backgroundThread();
+            return null;
+        }
+
     }
 
 //    // Sending a message to Watson Assistant Service

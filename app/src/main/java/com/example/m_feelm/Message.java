@@ -12,7 +12,8 @@ public class Message implements Serializable {
     public Message() {
         this.type = Type.TEXT;
     }
-    public Message(String url){this.type = Type.IMAGE;this.url=url;}
+    public Message(String url,String title){this.type = Type.IMAGE;this.url=url;this.title=title;}
+
 
 
     public Message(RuntimeResponseGeneric r) {
