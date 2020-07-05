@@ -75,6 +75,7 @@ public class ChatBotActivity extends AppCompatActivity{
     String yesno_date_txt[]={"개봉시기 선택","잘 모르겠어요"};
 
     private ArrayList<String> myMovieTitle=new ArrayList<>();
+    ArrayList<Button> myMovieTitle_btn=new ArrayList<>();
 
     Button genre_list_btn[]=new Button[9];
     Button nation_list_btn[]=new Button[14];
@@ -85,11 +86,14 @@ public class ChatBotActivity extends AppCompatActivity{
     String nation_text;
     String like_actor_text;
     String date_text;
+    String select_like_movie;
     int tot_number;
     int rand_number;
     StatisticMovieItem[] posts = new StatisticMovieItem[10];
+    KeywordsItem[] keywordlist = new KeywordsItem[10];
     String[] result_text= new String[5];
     ArrayList<String> arrayList = new ArrayList<>();
+    String[] keywords_text;
     MyAsyncTask2 task2 = new MyAsyncTask2();
 
     @Override
@@ -129,6 +133,7 @@ public class ChatBotActivity extends AppCompatActivity{
 
         //db에 있는 영화제목들 가져오는 함수
         setMyMovieTitleText();
+
         sendMessage();
 
         backgroundThread();
@@ -151,7 +156,11 @@ public class ChatBotActivity extends AppCompatActivity{
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     UserReview review=child.getValue(UserReview.class);
                     myMovieTitle.add(review.getTitle());
-                    Log.d("User val", review.getTitle());
+                    for(String title:myMovieTitle)
+                    {
+                        Log.d("User val", title);
+                    }
+                    //Log.d("User val", review.getTitle());
                 }
             }
             @Override
@@ -159,6 +168,11 @@ public class ChatBotActivity extends AppCompatActivity{
                 Log.d("fail","datebase 읽어오기 Error");
             }
         });
+    }
+
+    private void GetKeywords() {
+        MyAsyncTask3 async3 = new MyAsyncTask3();
+        async3.execute();
     }
 
     private void sendMessage(){
@@ -238,7 +252,6 @@ public class ChatBotActivity extends AppCompatActivity{
         btn_wrapper.addView(fit_btn);
         btn_wrapper.addView(genre_btn);
 
-
         fit_btn.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -249,10 +262,43 @@ public class ChatBotActivity extends AppCompatActivity{
             btn_wrapper.removeAllViews();
 
             //내 db에 있는 영화제목들 가져오기
+            Message inputMessage = new Message();
+            inputMessage.setMessage("관람하신 영화 중 하나를 골라주세요!");
+            inputMessage.setId("100");
+            messageArrayList.add(inputMessage);
 
+            for(String title : myMovieTitle)
+            {
+                Button btn = new Button(ChatBotActivity.this);
+                btn.setText(title);
+                myMovieTitle_btn.add(btn);
+            }
+
+            for(Button btn:myMovieTitle_btn)
+            {
+                btn_wrapper.addView(btn);
+            }
+            System.out.println(myMovieTitle_btn.size());
+
+            for(int i=0; i<myMovieTitle_btn.size();i++)
+            {
+                final int current=i;
+                final Button tempButton = myMovieTitle_btn.get(current);
+                tempButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        System.out.println(tempButton.getText().toString());
+                        select_like_movie=tempButton.getText().toString();
+                        btn_wrapper.removeAllViews();
+                        //키워드 가져오기 함수
+                        GetKeywords();
+                    }
+                });
+            }
            backgroundThread();
         }
         });
+
 
         genre_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -714,6 +760,13 @@ public class ChatBotActivity extends AppCompatActivity{
         return html.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "");
     }
 
+    public String removewords(String title) {
+        title = title.replaceAll("!HS", "");
+        title = title.replaceAll("!HE", "");
+        title = title.replaceAll("!HS2", "");
+        return title;
+    }
+
     public class MyAsyncTask2 extends AsyncTask<Void,Void,Void>{
         ArrayList<Item> movies;
         Item item;
@@ -783,6 +836,96 @@ public class ChatBotActivity extends AppCompatActivity{
             return null;
         }
 
+    }
+
+    //키워드 가져오기
+    class MyAsyncTask3 extends AsyncTask<String,Void, Integer> {
+        OkHttpClient client = new OkHttpClient();
+        @Override
+        protected Integer doInBackground(String... parmas) {
+            //http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?ServiceKey=UI6ZF443843L2KV91ZT5&genre
+            StringBuilder urlBuilder = new StringBuilder("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json.jsp?collection=kmdb_new");
+            //HttpUrl.Builder urlBuilder = HttpUrl.parse("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp").newBuilder();
+            try {
+                urlBuilder.append("&"+ URLEncoder.encode("ServiceKey","UTF-8")+"=UI6ZF443843L2KV91ZT5");
+                urlBuilder.append("&"+ URLEncoder.encode("query","UTF-8")+"="+URLEncoder.encode(select_like_movie,"UTF-8")+"&"+URLEncoder.encode("listCount","UTF-8")+"=1000"+"&"+URLEncoder.encode("ratedYn","UTF-8")+"=Y");
+
+
+                URL url = new URL(urlBuilder.toString());
+                System.out.println(url);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-type", "application/json");
+                System.out.println("Response code: " + conn.getResponseCode());
+
+                BufferedReader rd;
+                if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+                    rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                } else {
+                    rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                }
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while (true) {
+                    try {
+                        if (!((line = rd.readLine()) != null)) break;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    sb.append(line);
+                }
+
+                rd.close();
+                conn.disconnect();
+                String str = sb.toString();
+                System.out.println(str);
+                JsonParser parser = new JsonParser();
+                System.out.println(parser.parse(str).getClass().getName());
+                JsonElement element = (parser.parse(str)).getAsJsonObject().get("Data").getAsJsonArray().get(0).getAsJsonObject().get("Result");
+                Gson gson = new Gson();
+                keywordlist = gson.fromJson(element, KeywordsItem[].class);
+                if(keywordlist==null){
+                    return 0;
+                }
+                return keywordlist.length;
+
+            } catch (UnsupportedEncodingException ex) {
+                ex.printStackTrace();
+            } catch (ProtocolException ex) {
+                ex.printStackTrace();
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            return 0;
+        }
+
+
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            String text="";
+            for(int i=0; i<result; i++){
+                //System.out.println(select_like_movie.replaceAll(" ","").equals(removewords(keywordlist[i].getMovieNm().replaceAll(" ",""))));
+                if(select_like_movie.replaceAll(" ","").equals(removewords(keywordlist[i].getMovieNm().replaceAll(" ","")))) {
+                    System.out.println(keywordlist[i].getKeywords());
+                    text = keywordlist[i].getKeywords();
+                    keywords_text=text.split(",");
+                    /*keywords_text.add(keywordlist[i].getKeywords());*/
+                }
+            }
+
+            for(String word:keywords_text)
+            {
+                System.out.println(word);
+            }
+
+
+            backgroundThread();
+        }
     }
 
 //    // Sending a message to Watson Assistant Service
@@ -898,27 +1041,5 @@ public class ChatBotActivity extends AppCompatActivity{
 
 
 
-
-    /**
-     * Check Internet Connection
-     *
-     * @return
-     */
-    private boolean checkInternetConnection() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-
-        // Check for network connections
-        if (isConnected) {
-            return true;
-        } else {
-            Toast.makeText(this, " No Internet Connection available ", Toast.LENGTH_LONG).show();
-            return false;
-        }
-    }
 
 }
