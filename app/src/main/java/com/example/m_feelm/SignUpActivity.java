@@ -21,14 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import retrofit2.http.Tag;
@@ -41,8 +34,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     // 파이어베이스 인증 객체 생성
     private FirebaseAuth firebaseAuth;
-    private FirebaseDatabase database;
-    private DatabaseReference ref;
+    private FirebaseUser currentUser;
 
     // 이메일과 비밀번호
     private EditText editTextEmail;
@@ -50,7 +42,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private EditText editTextCheckPassword;
     private Button signUpBtn;
     ProgressDialog progressDialog;
-    boolean flag;
 
 
     @Override
@@ -64,20 +55,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editTextEmail = (EditText)findViewById(R.id.et_email);
         editTextPassword = (EditText)findViewById(R.id.et_password);
         editTextCheckPassword=(EditText)findViewById(R.id.check_password);
-
         signUpBtn = (Button)findViewById(R.id.sign_up_btn);
-        check_nickName_btn=(Button)findViewById(R.id.check_nickname_btn);
         progressDialog = new ProgressDialog(this);
 
-        database = FirebaseDatabase.getInstance();
-        ref = database.getReference().child("User_nickname").getRef();
 
         signUpBtn.setOnClickListener(this);
-        check_nickName_btn.setOnClickListener(this);
-
-        DatabaseReference postsRef = database.getReference().child("User_nickname");
-
-        DatabaseReference newPostRef = postsRef.push();
 
     }
 
@@ -85,7 +67,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
         String check_password = editTextCheckPassword.getText().toString().trim();
-
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, "Email을 입력해 주세요.", Toast.LENGTH_SHORT).show();
             return;
@@ -112,11 +93,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         if(task.isSuccessful()){
                             //Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(SignUpActivity.this, "등록 완료!", Toast.LENGTH_SHORT).show();
-                            DatabaseReference postsRef = database.getReference().child("User_nickname");
-                            DatabaseReference newPostRef = postsRef.push();
-                            newPostRef.setValue(new Nickname(nickname,firebaseAuth.getUid()));
-//                            newPostRef.setValue(nickName.getText().toString());
-//                            newPostRef.child(nickName.getText().toString()).setValue(firebaseAuth.getInstance().getUid());
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             finish();
                         } else {
@@ -135,64 +111,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private boolean checkNickname(){
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    DatabaseReference ref2 = snapshot.getRef();
-                    System.out.println(ref2.getKey());
-                    System.out.println(nickName.getText().toString());
-                    System.out.println((nickName.getText().toString()).equals(snapshot.getKey()));
-                    if((nickName.getText().toString()).equals(snapshot.getKey())){
-                        Toast.makeText(SignUpActivity.this, "중복!", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(SignUpActivity.this, "사용가능!", Toast.LENGTH_SHORT).show();
-                        flag=true;
-//                        DatabaseReference postsRef = database.getReference().child("User_nickname");
-//                        postsRef.child(nickName.getText().toString());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                    databaseError.getMessage();
-            }
-        });
-        return false;
-    }
-
     @Override
     public void onClick(View view) {
         if (view == signUpBtn) {
             //TODO
             registerUser();
         }
-        if(view==check_nickName_btn){
-            flag = checkNickname();
-        }
+
 
 //        if(view == textviewSingin) {
 //            //TODO
 //            startActivity(new Intent(this, LoginActivity.class)); //추가해 줄 로그인 액티비티
 //        }
     }
-
-    public class Nickname{
-        public String nickname;
-        public String Uid;
-
-        Nickname(String nickname, String uid){
-            this.nickname=nickname;
-            this.Uid=uid;
-        }
-    }
-
 }
-
-
-
-
-
-

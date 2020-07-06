@@ -32,7 +32,7 @@
 
         <activity android:name=".FragmentPrint"></activity>
         <activity android:name=".ActorInfoPopup" android:theme="@android:style/Theme.Dialog"></activity>
-        <provider
+        <!--<provider
             android:authorities="com.example.m_feelm.${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true"
@@ -41,7 +41,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
-        </provider>
+        </provider>-->
 
     </application>
 
