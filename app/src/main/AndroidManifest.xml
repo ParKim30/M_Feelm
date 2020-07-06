@@ -3,7 +3,15 @@
     package="com.example.m_feelm">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,13 +21,15 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/M_Feelm">
         <activity android:name=".SignUpActivity"></activity>
-        <activity android:name=".LoginActivity"><intent-filter>
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".ChatBotActivity"></activity>
+        <activity android:name=".WriteReview"></activity>
+        <activity android:name=".MainActivity"><intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter></activity>
-        <activity android:name=".WriteReview"></activity>
-        <activity android:name=".MainActivity"></activity>
+
         <activity android:name=".FragmentPrint"></activity>
         <activity android:name=".ActorInfoPopup" android:theme="@android:style/Theme.Dialog"></activity>
         <provider
