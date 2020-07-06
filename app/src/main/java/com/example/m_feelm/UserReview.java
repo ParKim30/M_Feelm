@@ -4,7 +4,6 @@ public class UserReview implements Comparable<UserReview>{
     private String title;
     private float rating;
     private String id;
-    //private boolean FeedYN;
     private String UserReview;
     private String watchDate;
     private String writeDate;

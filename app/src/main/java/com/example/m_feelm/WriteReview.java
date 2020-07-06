@@ -202,8 +202,6 @@ public class WriteReview extends Activity {
                         DatabaseReference postsRef = mDBReference.child("User_review");
 
                         DatabaseReference newPostRef = postsRef.push();
-                        //고유한 키 생성
-                        Log.d("코드는?",movieCode);
                         newPostRef.setValue(new Review(id, mtitle, date.getText().toString(), rating.getRating(), user_review.getText().toString(), write_date,movieCode,mposter,m_withPeople.getText().toString(),runTime));
 
                     }
@@ -240,7 +238,7 @@ public class WriteReview extends Activity {
                 Response response = client.newCall(request).execute();
                 JsonParser parser = new JsonParser();
                 JsonElement rootObject = parser.parse(response.body().charStream())
-                        .getAsJsonObject().get("movieListResult").getAsJsonObject().get("movieList").getAsJsonArray().get(0); //원하는 항목(?)까지 찾아 들어가야 한다.
+                        .getAsJsonObject().get("movieListResult").getAsJsonObject().get("movieList").getAsJsonArray().get(0);
 
                 String code = rootObject.getAsJsonObject().get("movieCd").toString();
                 return code;
@@ -372,13 +370,11 @@ public class WriteReview extends Activity {
                 else {
                     Log.d("!!Result3:", result);
                     String[] arr = result.split("\\|");
-                    Log.d("!!OMG", arr[0] + "\"");
 
                     arr[0] = arr[0].substring(1);
                     if (arr[0].contains("\"")) {
                         int len = arr[0].length();
                         mposter = arr[0].substring(0, len - 1);
-                        Log.d("!!OMG2", mposter);
                     } else mposter = arr[0];
 
                 }
