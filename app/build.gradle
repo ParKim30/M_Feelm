@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.1'
     implementation 'com.google.firebase:firebase-core:17.4.1'
     implementation 'com.google.firebase:firebase-database:19.3.0'
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
     implementation 'org.jsoup:jsoup:1.11.3'
 
     implementation 'com.android.support:multidex:1.0.3'
@@ -70,13 +71,22 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'com.github.PhilJay:MpAndroidChart:v3.0.2'
 
-    implementation 'com.ibm.watson:assistant:8.1.0'
-    implementation 'com.ibm.watson.developer_cloud:android-sdk:0.5.0'
-
     implementation ('com.github.bumptech.glide:glide:4.9.0') {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
+    implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'com.karumi:dexter:5.0.0'
+
+    implementation 'gun0912.ted:tedpermission:2.0.0'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.HendrixString:Android-PdfMyXml:v1.0.1'
+    implementation group: 'com.itextpdf.tool', name: 'xmlworker', version: '5.5.13'
+
     implementation 'org.apmem.tools:layouts:1.10'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 }

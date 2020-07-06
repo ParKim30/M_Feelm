@@ -47,9 +47,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     // 이메일과 비밀번호
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private EditText checkPassword;
-    private EditText nickName;
-    private Button check_nickName_btn;
+    private EditText editTextCheckPassword;
     private Button signUpBtn;
     ProgressDialog progressDialog;
     boolean flag;
@@ -65,8 +63,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         editTextEmail = (EditText)findViewById(R.id.et_email);
         editTextPassword = (EditText)findViewById(R.id.et_password);
-        checkPassword = (EditText)findViewById(R.id.check_password);
-        nickName = (EditText)findViewById(R.id.nickname);
+        editTextCheckPassword=(EditText)findViewById(R.id.check_password);
+
         signUpBtn = (Button)findViewById(R.id.sign_up_btn);
         check_nickName_btn=(Button)findViewById(R.id.check_nickname_btn);
         progressDialog = new ProgressDialog(this);
@@ -85,9 +83,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void registerUser() {
         String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString();
-        String checkpassword = checkPassword.getText().toString();
-        String nickname = nickName.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        String check_password = editTextCheckPassword.getText().toString().trim();
 
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, "Email을 입력해 주세요.", Toast.LENGTH_SHORT).show();
@@ -97,12 +94,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this, "Password를 입력해 주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(nickname)){
-            Toast.makeText(this, "nickname을 입력해 주세요.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if(!(password.equals(checkpassword))){
-            Toast.makeText(this, "Password를 다시 한 번 확인해주세요.", Toast.LENGTH_SHORT).show();
+        if(!(password.equals(check_password))) {
+            Toast.makeText(this,"비밀번호가 일치하지 않습니다.",Toast.LENGTH_SHORT).show();
             return;
         }
 

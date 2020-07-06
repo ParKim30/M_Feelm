@@ -35,9 +35,8 @@
         android:background="?android:attr/windowBackground"
         app:menu="@menu/menu_bottom"
         app:labelVisibilityMode="unlabeled"
-        app:itemIconSize="@dimen/bottom_navigation_icon_size">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        app:itemIconTint="@color/bottom_bar_item_selector"
+        app:itemIconSize="@dimen/bottom_navigation_icon_size" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

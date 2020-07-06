@@ -29,6 +29,20 @@
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter></activity>
+
+        <activity android:name=".FragmentPrint"></activity>
+        <activity android:name=".ActorInfoPopup" android:theme="@android:style/Theme.Dialog"></activity>
+        <provider
+            android:authorities="com.example.m_feelm.${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:name="androidx.core.content.FileProvider">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
     </application>
 
 </manifest>

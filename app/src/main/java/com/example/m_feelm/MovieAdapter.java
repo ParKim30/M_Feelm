@@ -61,6 +61,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         //movieViewHolder.mTvDirector.setText(Html.fromHtml(reDirector));
         //movieViewHolder.mTvActor.setText(Html.fromHtml(reActor));
 
+
         //url을 통해 원격에 있는 이미지를 로딩
         Glide.with(mContext)
                 .load(item.getImage())
