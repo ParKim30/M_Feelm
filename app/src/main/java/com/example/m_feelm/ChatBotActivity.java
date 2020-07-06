@@ -69,6 +69,7 @@ public class ChatBotActivity extends AppCompatActivity{
     ProgressDialog progressDialog;
     private static String TAG = "ChatBotActivity";
     private Context mContext;
+    boolean isAgain=false;
     String genre_txt[] = {"코메디","액션","로맨스","스릴러","공포","판타지","SF","아동"};
     String nation_txt[]={"뉴질랜드","대만","대한민국","미국","멕시코","베트남","싱가포르","스페인","일본","영국","중국","태국","필리핀","없음"};
     String yesno_txt[]={"있음","없음"};
@@ -87,11 +88,15 @@ public class ChatBotActivity extends AppCompatActivity{
     String like_actor_text;
     String date_text;
     String select_like_movie;
+    String rand_word;
     int tot_number;
     int rand_number;
-    StatisticMovieItem[] posts = new StatisticMovieItem[10];
     KeywordsItem[] keywordlist = new KeywordsItem[10];
+    KeywordsItem[] keywordlist2 = new KeywordsItem[10];
+    StatisticMovieItem[] posts = new StatisticMovieItem[10];
+
     String[] result_text= new String[5];
+    String[] result_text2= new String[5];
     ArrayList<String> arrayList = new ArrayList<>();
     String[] keywords_text;
     MyAsyncTask2 task2 = new MyAsyncTask2();
@@ -134,7 +139,10 @@ public class ChatBotActivity extends AppCompatActivity{
         //db에 있는 영화제목들 가져오는 함수
         setMyMovieTitleText();
 
-        sendMessage();
+        do{
+            sendMessage();
+        }while(isAgain);
+
 
         backgroundThread();
 
@@ -743,7 +751,17 @@ public class ChatBotActivity extends AppCompatActivity{
                 //naver poster 가져오는거 다시해보기
                 task2.execute();
 
+                /*Button again_btn = new Button(getApplicationContext());
+                again_btn.setText("다시하기");
+                btn_wrapper.addView(again_btn);
 
+                again_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        isAgain=true;
+                        btn_wrapper.removeAllViews();
+                    }
+                });*/
             }
             if(result==0)
             {
@@ -830,7 +848,6 @@ public class ChatBotActivity extends AppCompatActivity{
             for(int i=0;i<result_text.length; i++){
                 getMovies(result_text[i],i+1);
             }
-
 
             backgroundThread();
             return null;
@@ -923,123 +940,194 @@ public class ChatBotActivity extends AppCompatActivity{
                 System.out.println(word);
             }
 
+            int rand_number = (int)(Math.random()*(keywords_text.length));
+            rand_word=keywords_text[rand_number];
+
+            MyAsyncTask4 async4 = new MyAsyncTask4();
+            async4.execute();
 
             backgroundThread();
         }
     }
 
-//    // Sending a message to Watson Assistant Service
-//    private void sendMessage() {
-//
-//       inputmessage = this.inputMessage.getText().toString().trim();
-//        if (!this.initialRequest) {
-//            Message inputMessage = new Message();
-//            inputMessage.setMessage(inputmessage);
-//            inputMessage.setId("1");
-//            messageArrayList.add(inputMessage);
-//        } else {
-//            Message inputMessage = new Message();
-//            inputMessage.setMessage(inputmessage);
-//            inputMessage.setId("100");
-//            this.initialRequest = false;
-//            //Toast.makeText(getApplicationContext(), "Tap on the message for Voice", Toast.LENGTH_LONG).show();
-//
-//        }
-//
-//        this.inputMessage.setText("");
-//        mAdapter.notifyDataSetChanged();
-//
-//        if (watsonAssistantSession == null) {
-//            ServiceCall<SessionResponse> call = watsonAssistant.createSession(new CreateSessionOptions.Builder().assistantId(mContext.getString(R.string.assistant_id)).build());
-//            //watsonAssistantSession = call.execute();
-//            System.out.print("test");
-//        }
-////        BackgroundThread thread = new BackgroundThread();
-////
-////        thread.start();
-//        Thread thread = new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//                    if (watsonAssistantSession == null) {
-//                        ServiceCall<SessionResponse> call = watsonAssistant.createSession(new CreateSessionOptions.Builder().assistantId(mContext.getString(R.string.assistant_id)).build());
-//                        watsonAssistantSession = call.execute();
-//                    }
-//
-//                    MessageInput input = new MessageInput.Builder()
-//                            .text(inputmessage)
-//                            .build();
-//                    MessageOptions options = new MessageOptions.Builder()
-//                            .assistantId(mContext.getString(R.string.assistant_id))
-//                            .input(input)
-//                            .sessionId(watsonAssistantSession.getResult().getSessionId())
-//                            .build();
-//                    Response<MessageResponse> response = watsonAssistant.message(options).execute();
-//                    Log.i(TAG, "run: " + response.getResult());
-//                    if (response != null &&
-//                            response.getResult().getOutput() != null &&
-//                            !response.getResult().getOutput().getGeneric().isEmpty()) {
-//
-//                        List<RuntimeResponseGeneric> responses = response.getResult().getOutput().getGeneric();
-//
-//                        for (RuntimeResponseGeneric r : responses) {
-//                            Message outMessage;
-//                            switch (r.responseType()) {
-//                                case "text":
-//                                    outMessage = new Message();
-//                                    outMessage.setMessage(r.text());
-//                                    outMessage.setId("2");
-//
-//                                    messageArrayList.add(outMessage);
-//
-//                                    break;
-//
-//                                case "option":
-//                                    outMessage =new Message();
-//                                    String title = r.title();
-//                                    String OptionsOutput = "";
-//                                    for (int i = 0; i < r.options().size(); i++) {
-//                                        DialogNodeOutputOptionsElement option = r.options().get(i);
-//                                        OptionsOutput = OptionsOutput + option.getLabel() +"\n";
-//
-//                                    }
-//                                    outMessage.setMessage(title + "\n" + OptionsOutput);
-//                                    outMessage.setId("2");
-//
-//                                    messageArrayList.add(outMessage);
-//
-//                                    break;
-//
-//                                case "image":
-//                                    outMessage = new Message(r);
-//                                    messageArrayList.add(outMessage);
-//
-//                                    break;
-//                                default:
-//                                    Log.e("Error", "Unhandled message type");
-//                            }
-//                        }
-//
-//                                        runOnUiThread(new Runnable() {
-//                                            public void run() {
-//                                                mAdapter.notifyDataSetChanged();
-//                                                if (mAdapter.getItemCount() > 1) {
-//                                                    recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, null, mAdapter.getItemCount() - 1);
-//
-//                                                }
-//
-//                                            }
-//                                        });
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        thread.start();
-//    }
+    //키워드로 검색하기
+    class MyAsyncTask4 extends AsyncTask<String,Void, Integer> {
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Integer doInBackground(String... parmas) {
+            //http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?ServiceKey=UI6ZF443843L2KV91ZT5&genre
+            StringBuilder urlBuilder = new StringBuilder("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json.jsp?collection=kmdb_new");
+            //HttpUrl.Builder urlBuilder = HttpUrl.parse("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp").newBuilder();
+            try {
+                urlBuilder.append("&" + URLEncoder.encode("ServiceKey", "UTF-8") + "=UI6ZF443843L2KV91ZT5");
+                urlBuilder.append("&" + URLEncoder.encode("keyword", "UTF-8") + "=" + URLEncoder.encode(rand_word, "UTF-8") + "&" + URLEncoder.encode("listCount", "UTF-8") + "=1000" + "&" + URLEncoder.encode("ratedYn", "UTF-8") + "=Y");
 
 
+                URL url = new URL(urlBuilder.toString());
+                System.out.println(url);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-type", "application/json");
+                System.out.println("Response code: " + conn.getResponseCode());
+
+                BufferedReader rd;
+                if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+                    rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                } else {
+                    rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                }
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while (true) {
+                    try {
+                        if (!((line = rd.readLine()) != null)) break;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    sb.append(line);
+                }
+
+                rd.close();
+                conn.disconnect();
+                String str = sb.toString();
+                System.out.println(str);
+                JsonParser parser = new JsonParser();
+                System.out.println(parser.parse(str).getClass().getName());
+                JsonElement element = (parser.parse(str)).getAsJsonObject().get("Data").getAsJsonArray().get(0).getAsJsonObject().get("Result");
+                Gson gson = new Gson();
+                keywordlist2 = gson.fromJson(element, KeywordsItem[].class);
+                if (keywordlist2 == null) {
+                    return 0;
+                }
+                return keywordlist2.length;
+
+            } catch (UnsupportedEncodingException ex) {
+                ex.printStackTrace();
+            } catch (ProtocolException ex) {
+                ex.printStackTrace();
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            return 0;
+        }
 
 
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            if (result != 0) {
+                tot_number = result;
+                System.out.println("tot_number : " + tot_number);
+                rand_number = (int) (Math.random() * (tot_number - 5));
+                System.out.println("random : " + rand_number);
+
+                if (tot_number <= 5) {
+                    //총 개수가 5개가 넘지 않을 때 처리
+                    rand_number = 0;
+                    for (int i = rand_number; i < tot_number; i++) {
+                        if (keywordlist2[i].getMovieNm() != null) {
+                            result_text2[i] = (keywordlist2[i].getMovieNm());
+
+                        }
+                    }
+                } else {
+                    int cnt = 0;
+                    for (int i = rand_number; i < rand_number + 5; i++) {
+                        //ArrayList에 result 값을 넣어주기
+                        if (keywordlist2[i].getMovieNm() != null) {
+                            result_text2[cnt] = (keywordlist2[i].getMovieNm());
+                            System.out.println("키워드로 찾은 제목"+keywordlist2[i].getMovieNm());
+                            cnt++;
+                        }
+                    }
+
+                }
+
+                MyAsyncTask5 async5 = new MyAsyncTask5();
+                async5.execute();
+
+                backgroundThread();
+            }
+        }
+
+
+        //네이버 포스터 가져올때
+        public class MyAsyncTask5 extends AsyncTask<Void, Void, Void> {
+            ArrayList<Item> movies;
+            Item item;
+
+            // 영화 가져오기
+            public void getMovies(final String title) {
+                ApiInterface apiInterface = ServiceGenerator.createService(ApiInterface.class);
+                Call<Movie> call = apiInterface.getMovies(title, 50, 1);
+                call.enqueue(new Callback<Movie>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Movie> call, @NonNull retrofit2.Response<Movie> response) {
+                        if (response.isSuccessful()) {
+                            movies = new ArrayList(response.body().getItems());
+                            //!!!!!!!제목에 맞게 포스터 나오게 해야함!
+                            //item=movies.get(0);
+                        /*for(int i=0; i<movies.size(); i++)
+                        {
+                            System.out.println(i+movies.get(i).getTitle());
+                        }*/
+                            int i = 0;
+                            while (i < movies.size()) {
+                                item = movies.get(i);
+                                try {
+                                    String getTitle = removeTag(item.getTitle());
+                                    getTitle = getTitle.replaceAll(" ", "");
+                                    item.setTitle(getTitle);
+                                    System.out.println("getTitle:" + getTitle);
+                                    System.out.println("kmdbTitle:" + title.replaceAll(" ", ""));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                System.out.println(item.getTitle().equals(title.replaceAll(" ", "")));
+                                if (item.getTitle().equals(title.replaceAll(" ", ""))) {
+                                    System.out.println("ㅁㅁㅁ" + title);
+                                    if (!(item.getImage().equals(""))) {
+                                        Message inputMessage2 = new Message(item.getImage(), title);
+                                        inputMessage2.setId("300");
+                                        messageArrayList.add(inputMessage2);
+                                    }
+                                    break;
+                                } else {
+                                    i++;
+                                }
+                            }
+
+                            backgroundThread();
+                            arrayList.add(item.getImage());
+                        } else {
+                            Log.e(TAG, response.message());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
+                        Log.e(TAG, t.getMessage());
+                    }
+                });
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                //progressDialog.dismiss();
+
+                for(int i=0;i<result_text2.length; i++){
+                    getMovies(result_text2[i]);
+                }
+
+                backgroundThread();
+                return null;
+            }
+
+        }
+    }
 }
