@@ -9,16 +9,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private FragmentSearch fragmentSearch = new FragmentSearch();
     private FragmentFeelm fragmentFeelm = new FragmentFeelm();
     private FragmentStatistic fragmentStatistic = new FragmentStatistic();
-    //private FragmentFeed fragmentFeed = new FragmentFeed();
+    private FloatingActionButton chatbot_btn;
     private FragmentStatistic_my fragmentStatisticMy=new FragmentStatistic_my();
 
 
@@ -34,6 +36,15 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setBackgroundColor(Color.BLACK);
         transaction.replace(R.id.frame_layout, fragmentFeelm).commitAllowingStateLoss();
+      
+        chatbot_btn = findViewById(R.id.chatbot);
+        chatbot_btn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(getApplicationContext(),ChatBotActivity.class);
+        startActivity(intent);
     }
 
     class ItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener{

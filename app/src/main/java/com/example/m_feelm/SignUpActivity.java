@@ -75,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this, "Password를 입력해 주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(password!=check_password) {
+        if(!(password.equals(check_password))) {
             Toast.makeText(this,"비밀번호가 일치하지 않습니다.",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -125,9 +125,3 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 //        }
     }
 }
-
-
-
-
-
-
