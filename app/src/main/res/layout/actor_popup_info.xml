@@ -11,21 +11,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:padding="10dp"
         android:text="TextView"
-        android:textColor="#000000"
-        android:textSize="30sp" />
+        android:textColor="#FF5D18"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <GridView
         android:id="@+id/gridview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="338dp"
         android:layout_marginBottom="8dp"
-        android:numColumns="3"/>
+        android:numColumns="3" />
 
+    <!--
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:id="@+id/closeBtn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="닫기" />
+        android:layout_margin="5dp"
+        android:background="@color/MfeelmPrimary"
+        android:padding="5dp"
+        android:text="닫기"
+        android:textColor="#FFFFFF" />-->
 
 </LinearLayout>

@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/feelmImg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="590dp"
         android:layout_weight="1"
         app:srcCompat="@drawable/feelm" />
 
@@ -30,12 +30,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="5dp">
 
         <TextView
             android:id="@+id/pubDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
@@ -46,7 +47,7 @@
 
         <TextView
             android:id="@+id/genre"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingLeft="5dp"

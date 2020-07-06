@@ -4,10 +4,9 @@ public class UserReview implements Comparable<UserReview>{
     private String title;
     private float rating;
     private String id;
-    //private boolean FeedYN;
     private String UserReview;
-    private String watch_Date;
-    private String write_Date;
+    private String watchDate;
+    private String writeDate;
     private String movieCode;
     private String posterUrl;
     private String withPeople;
@@ -19,8 +18,8 @@ public class UserReview implements Comparable<UserReview>{
         this.id=Uid;
         //this.FeedYN=feedYN;
         this.UserReview=UserReview;
-        this.watch_Date=watchDate;
-        this.write_Date=writeDate;
+        this.watchDate=watchDate;
+        this.writeDate=writeDate;
         this.movieCode=movieCode;
         this.posterUrl=posterUrl;
         this.withPeople=withPeople;
@@ -71,11 +70,11 @@ public class UserReview implements Comparable<UserReview>{
     }
 
     public void setWatch_Date(String watch_Date) {
-        this.watch_Date = watch_Date;
+        this.watchDate = watch_Date;
     }
 
     public void setWrite_Date(String write_Date) {
-        this.write_Date = write_Date;
+        this.writeDate = write_Date;
     }
 
     public String getTitle() {
@@ -94,12 +93,12 @@ public class UserReview implements Comparable<UserReview>{
         return UserReview;
     }
 
-    public String getWatch_Date() {
-        return watch_Date;
+    public String getWatchDate() {
+        return watchDate;
     }
 
-    public String getWrite_Date() {
-        return write_Date;
+    public String getWriteDate() {
+        return writeDate;
     }
 
     @Override
