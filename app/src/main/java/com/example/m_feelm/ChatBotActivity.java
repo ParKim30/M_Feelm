@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -201,22 +202,30 @@ public class ChatBotActivity extends AppCompatActivity{
         drawable.setStroke(5, Color.rgb(250,100,0));
         drawable.setColor(Color.WHITE);
         drawable.setCornerRadius(50.0f);
-        //drawable.setSize(50,50);
+        drawable.setSize(40,10);
+
+        GradientDrawable drawable1 = new GradientDrawable();
+        //drawable1.setStroke(3, Color.rgb(250,100,0));
+        drawable.setColor(Color.rgb(250,100,0));
+
+
         // 버튼 생성
         Button fit_btn = new Button(this);
         fit_btn.setText("맞춤 영화 추천");
-        fit_btn.setBackgroundDrawable(drawable);
+        //fit_btn.setBackgroundDrawable(drawable);
+        fit_btn.setBackground(getDrawable(R.drawable.actor_btn_shape));
+        fit_btn.setPadding(20,0,20,0);
         Button genre_btn = new Button(this);
         genre_btn.setText("장르별 영화 추천");
-        genre_btn.setBackgroundDrawable(drawable);
+        genre_btn.setPadding(20,0,20,0);
+        //genre_btn.setBackgroundDrawable(drawable);
+   //   genre_btn.setBackgroundDrawable(drawable);
+        genre_btn.setBackground(getDrawable(R.drawable.actor_btn_shape));
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(0,0,0,20);
+        FlowLayout.LayoutParams lp = new FlowLayout.LayoutParams(300, 150);
 
-        fit_btn.setLayoutParams(lp);
-        genre_btn.setLayoutParams(lp);
+        //fit_btn.setLayoutParams(lp);
+        //genre_btn.setLayoutParams(lp);
 
         genre_list_btn = new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext()),
                 new Button(getApplicationContext()), new Button(getApplicationContext()), new Button(getApplicationContext())};
@@ -229,8 +238,11 @@ public class ChatBotActivity extends AppCompatActivity{
 
         yesno_date_btn=new Button[]{new Button(getApplicationContext()), new Button(getApplicationContext())};
 
+
         for(int i=0; i<8; i++) {
             genre_list_btn[i].setText(genre_txt[i]);
+            genre_list_btn[i].setBackground(getDrawable(R.drawable.actor_btn_shape));
+            //genre_list_btn[i].setBackground(drawable);
             //genre_list_btn[i].setBackgroundDrawable(drawable);
             //genre_list_btn[i].setLayoutParams(lp);
         }
@@ -238,13 +250,16 @@ public class ChatBotActivity extends AppCompatActivity{
         for(int i=0; i<14;i++)
         {
             nation_list_btn[i].setText(nation_txt[i]);
+            nation_list_btn[i].setBackground(getDrawable(R.drawable.actor_btn_shape));
+            //nation_list_btn[i].setBackgroundColor(Color.rgb(250,100,0));
+            //nation_list_btn[i].setBackground(drawable1);
             //nation_list_btn[i].setBackgroundDrawable(drawable);
-            //nation_list_btn[i].setLayoutParams(lp);
         }
 
         for(int i=0; i<2;i++)
         {
             yesno_btn[i].setText(yesno_txt[i]);
+            yesno_btn[i].setBackground(getDrawable(R.drawable.actor_btn_shape));
             //nation_list_btn[i].setBackgroundDrawable(drawable);
             //nation_list_btn[i].setLayoutParams(lp);
         }
@@ -252,6 +267,8 @@ public class ChatBotActivity extends AppCompatActivity{
         for(int i=0; i<2;i++)
         {
             yesno_date_btn[i].setText(yesno_date_txt[i]);
+            yesno_date_btn[i].setBackground(getDrawable(R.drawable.actor_btn_shape));
+            yesno_date_btn[i].setPadding(20,0,20,0);
             //nation_list_btn[i].setBackgroundDrawable(drawable);
             //nation_list_btn[i].setLayoutParams(lp);
         }
@@ -278,6 +295,8 @@ public class ChatBotActivity extends AppCompatActivity{
             for(String title : myMovieTitle)
             {
                 Button btn = new Button(ChatBotActivity.this);
+                btn.setBackground(getDrawable(R.drawable.actor_btn_shape));
+                btn.setPadding(20,0,20,0);
                 btn.setText(title);
                 myMovieTitle_btn.add(btn);
             }
@@ -298,6 +317,8 @@ public class ChatBotActivity extends AppCompatActivity{
                         System.out.println(tempButton.getText().toString());
                         select_like_movie=tempButton.getText().toString();
                         btn_wrapper.removeAllViews();
+                        progressDialog.setMessage("분석중입니다. 기다려 주세요...");
+                        progressDialog.show();
                         //키워드 가져오기 함수
                         GetKeywords();
                     }
@@ -1118,7 +1139,7 @@ public class ChatBotActivity extends AppCompatActivity{
 
             @Override
             protected Void doInBackground(Void... voids) {
-                //progressDialog.dismiss();
+                progressDialog.dismiss();
 
                 for(int i=0;i<result_text2.length; i++){
                     getMovies(result_text2[i]);

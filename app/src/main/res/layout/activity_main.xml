@@ -15,7 +15,8 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="85dp"
         android:clickable="true"
-        app:srcCompat="@drawable/feed" />
+        app:srcCompat="@drawable/character_icon"
+        />
 
     <FrameLayout
         android:id="@+id/frame_layout"

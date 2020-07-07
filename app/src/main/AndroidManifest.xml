@@ -6,21 +6,21 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/M_Feelm">
         <activity android:name=".SignUpActivity"></activity>
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".ChatBotActivity"></activity>
-        <activity android:name=".WriteReview"></activity>
-        <activity android:name=".MainActivity"><intent-filter>
+        <activity android:name=".LoginActivity"><intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter></activity>
+        <activity android:name=".ChatBotActivity"></activity>
+        <activity android:name=".WriteReview"></activity>
+        <activity android:name=".MainActivity"></activity>
 
         <activity android:name=".FragmentPrint"></activity>
         <activity android:name=".ShowReview"></activity>
