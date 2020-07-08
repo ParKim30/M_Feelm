@@ -2,6 +2,7 @@ package com.example.m_feelm;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -57,8 +58,10 @@ public class WriteReview extends Activity {
     MyAsyncTask3 async3;
 
     PopupWindow mPopupWindow;
+    ProgressDialog progressDialog;
 
     Calendar myCalendar = Calendar.getInstance();
+
 
     DatePickerDialog.OnDateSetListener myDatePicker = (view, year, month, dayOfMonth) -> {
         myCalendar.set(Calendar.YEAR, year);
@@ -71,8 +74,6 @@ public class WriteReview extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write_review);
-
-
 
         MyAsyncTask async = new MyAsyncTask();
         async2=new MyAsyncTask2();
@@ -110,7 +111,7 @@ public class WriteReview extends Activity {
         //TextView m_actor = findViewById(R.id.actor);
         FlowLayout fl = findViewById(R.id.flowlayout);
         RatingBar m_rating= findViewById(R.id.user_rating);
-        TextView m_date = findViewById(R.id.watchDate);
+        TextView m_date = findViewById(R.id.pubDate);
         TextView m_ratingNum=findViewById(R.id.user_rating_num);
         TextView m_withPeople=findViewById(R.id.withPeople);
 
@@ -185,6 +186,9 @@ public class WriteReview extends Activity {
 
 
                     if(user!=null) {
+                        //progressDialog.setMessage("ProgressDialog running...");
+                        //progressDialog.show();
+
                         String id = user.getUid();
                         RatingBar rating = findViewById(R.id.my_rating);
                         EditText user_review = findViewById(R.id.Myreview);
@@ -203,9 +207,8 @@ public class WriteReview extends Activity {
 
                         DatabaseReference newPostRef = postsRef.push();
                         newPostRef.setValue(new Review(id, mtitle, date.getText().toString(), rating.getRating(), user_review.getText().toString(), write_date,movieCode,mposter,m_withPeople.getText().toString(),runTime));
-
+                        //progressDialog.dismiss();
                     }
-
             finish();
         }
 

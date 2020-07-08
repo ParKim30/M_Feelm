@@ -33,9 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
-
-        bottomNavigationView.setBackgroundColor(Color.BLACK);
-        transaction.replace(R.id.frame_layout, fragmentFeelm).commitAllowingStateLoss();
+        bottomNavigationView.setSelectedItemId(R.id.menu_search);
+        transaction.replace(R.id.frame_layout, fragmentSearch).commitAllowingStateLoss();
       
         chatbot_btn = findViewById(R.id.chatbot);
         chatbot_btn.setOnClickListener(this);

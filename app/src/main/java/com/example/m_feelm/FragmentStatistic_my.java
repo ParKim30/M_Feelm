@@ -1,5 +1,6 @@
 package com.example.m_feelm;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -91,9 +92,9 @@ public class FragmentStatistic_my extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_statistic_my, container, false);
 
+
         totalTime=root.findViewById(R.id.TotalTime);
         myRanking(root);
-
 
         return root;
     }

@@ -35,7 +35,7 @@ public class FeelmPagerAdapter extends PagerAdapter {
     {
         this.mContext = context;
         this.userReviews = userReviews;
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
         Log.d("출력","adapter 연결 중");
     }
 
@@ -43,7 +43,7 @@ public class FeelmPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.feelm_item, null);
 

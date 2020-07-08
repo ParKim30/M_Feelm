@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/feelm_background2">
+    android:background="@drawable/feelm_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -33,9 +33,9 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="500dp"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="110dp"
+            android:layout_marginBottom="150dp"
             android:paddingLeft="80dp"
             android:paddingRight="80dp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -38,16 +38,46 @@ public class FragmentFeelm extends Fragment {
     private FirebaseUser user;
     private ArrayList<UserReview> userReviews=new ArrayList<>();
     private static final int DP = 24;
-
+    Context context;
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_feelm, container,
                 false);
 
-        Context context=getContext();
-        ViewPager viewPager = root.findViewById(R.id.pager);
-        intializeData();
-//        FeelmPagerAdapter adapter=new FeelmPagerAdapter(context, userReviews);
+        context=getContext();
+
+        intializeData(root);
+        //FeelmPagerAdapter adapter=new FeelmPagerAdapter(context, userReviews);
 //        adapter.notifyDataSetChanged();
+
+        return root;
+    }
+    public void intializeData(View root){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+
+        mDatabase = FirebaseDatabase.getInstance();
+        mReference=mDatabase.getReference("User_review");
+
+        mReference.orderByChild("id").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userReviews.clear();
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    UserReview review=child.getValue(UserReview.class);
+                    userReviews.add(review);
+                    Log.d("User val", review.getMovieCode());
+                    Log.d("User val", child.child("rating").getValue().toString());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("fail","datebase 읽어오기 Error");
+            }
+        });
+
+        ViewPager viewPager = root.findViewById(R.id.pager);
+
         viewPager.setAdapter(new FeelmPagerAdapter(context, userReviews));
         viewPager.setClipToPadding(false);
         viewPager.setClipChildren(false);
@@ -80,33 +110,6 @@ public class FragmentFeelm extends Fragment {
                     page.setTranslationY(0);
                     page.setScaleY(0.75f);
                 }
-
-            }
-        });
-        return root;
-    }
-    public void intializeData(){
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
-
-        mDatabase = FirebaseDatabase.getInstance();
-        mReference=mDatabase.getReference("User_review");
-
-        mReference.orderByChild("id").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userReviews.clear();
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    UserReview review=child.getValue(UserReview.class);
-                    userReviews.add(review);
-                    Log.d("User val", review.getMovieCode());
-                    Log.d("User val", child.child("rating").getValue().toString());
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("fail","datebase 읽어오기 Error");
             }
         });
     }

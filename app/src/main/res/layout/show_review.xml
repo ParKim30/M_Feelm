@@ -68,9 +68,8 @@
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold" />
-
     <TextView
-        android:id="@+id/watchDate"
+        android:id="@+id/watchDate_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -78,7 +77,24 @@
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold" />
-
+    <TextView
+        android:id="@+id/watchDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="관람일"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/writeDate_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="작성일"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
     <TextView
         android:id="@+id/writeDate"
         android:layout_width="match_parent"
@@ -90,10 +106,20 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/review_title"
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:layout_marginTop="30dp"
+        android:text="리뷰"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/review"
         android:layout_width="match_parent"
-        android:layout_height="267dp"
-        android:layout_marginTop="30dp"
+        android:layout_height="152dp"
+        android:layout_marginTop="10dp"
         android:text="리뷰"
         android:textColor="#000000"
         android:textSize="18sp"
